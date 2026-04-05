@@ -7,19 +7,13 @@
     <!-- ResponsiveVoice for natural female TTS -->
     <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
             color: white;
         }
-
         .container {
             max-width: 600px;
             margin: 0 auto;
@@ -29,23 +23,9 @@
             flex-direction: column;
             justify-content: center;
         }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .logo {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
-
-        h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            color: #ffd700;
-        }
-
+        .header { text-align: center; margin-bottom: 30px; }
+        .logo { font-size: 48px; margin-bottom: 10px; }
+        h1 { font-size: 28px; margin-bottom: 10px; color: #ffd700; }
         .winner-card {
             background: linear-gradient(145deg, #2d2d44, #1f1f33);
             border-radius: 20px;
@@ -55,7 +35,6 @@
             border: 2px solid #ffd700;
             margin-bottom: 30px;
         }
-
         .winner-badge {
             background: linear-gradient(135deg, #ffd700, #ffaa00);
             color: #1a1a2e;
@@ -68,44 +47,12 @@
             text-transform: uppercase;
             letter-spacing: 2px;
         }
-
-        .winner-name {
-            font-size: 36px;
-            color: #fff;
-            margin: 20px 0;
-            text-shadow: 0 2px 10px rgba(255,215,0,0.3);
-        }
-
-        .prize-text {
-            color: #88ff88;
-            font-size: 20px;
-            margin: 20px 0;
-        }
-
-        .offers {
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .offer-item {
-            display: flex;
-            align-items: center;
-            margin: 15px 0;
-            text-align: left;
-        }
-
-        .offer-icon {
-            font-size: 24px;
-            margin-right: 15px;
-            width: 40px;
-        }
-
-        .offer-text {
-            font-size: 16px;
-        }
-
+        .winner-name { font-size: 36px; color: #fff; margin: 20px 0; text-shadow: 0 2px 10px rgba(255,215,0,0.3); }
+        .prize-text { color: #88ff88; font-size: 20px; margin: 20px 0; }
+        .offers { background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; margin: 20px 0; }
+        .offer-item { display: flex; align-items: center; margin: 15px 0; text-align: left; }
+        .offer-icon { font-size: 24px; margin-right: 15px; width: 40px; }
+        .offer-text { font-size: 16px; }
         .talk-to-sarah {
             background: linear-gradient(135deg, #00c853, #00a843);
             color: white;
@@ -119,34 +66,12 @@
             transition: all 0.3s ease;
             box-shadow: 0 10px 30px rgba(0,200,83,0.3);
         }
-
-        .talk-to-sarah:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(0,200,83,0.4);
-        }
-
-        .talk-to-sarah:disabled {
-            background: #666;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .voice-container {
-            display: none;
-            background: linear-gradient(145deg, #2d2d44, #1f1f33);
-            border-radius: 20px;
-            padding: 30px;
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .voice-container.active {
-            display: block;
-        }
-
+        .talk-to-sarah:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0,200,83,0.4); }
+        .talk-to-sarah:disabled { background: #666; cursor: not-allowed; transform: none; }
+        .voice-container { display: none; background: linear-gradient(145deg, #2d2d44, #1f1f33); border-radius: 20px; padding: 30px; margin: 20px 0; text-align: center; }
+        .voice-container.active { display: block; }
         .sarah-avatar {
-            width: 120px;
-            height: 120px;
+            width: 120px; height: 120px;
             background: linear-gradient(135deg, #667eea, #764ba2);
             border-radius: 50%;
             margin: 0 auto 20px;
@@ -156,79 +81,21 @@
             font-size: 60px;
             animation: pulse 2s infinite;
         }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .conversation {
-            background: rgba(0,0,0,0.3);
-            border-radius: 15px;
-            padding: 20px;
-            max-height: 300px;
-            overflow-y: auto;
-            margin: 20px 0;
-            text-align: left;
-        }
-
-        .message {
-            margin: 15px 0;
-            padding: 15px;
-            border-radius: 15px;
-            line-height: 1.5;
-        }
-
-        .message.sarah {
-            background: rgba(102, 126, 234, 0.3);
-            border-left: 4px solid #667eea;
-        }
-
-        .message.customer {
-            background: rgba(0, 200, 83, 0.2);
-            border-right: 4px solid #00c853;
-        }
-
-        .message-label {
-            font-size: 12px;
-            color: #888;
-            margin-bottom: 5px;
-        }
-
-        .waveform {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            height: 40px;
-            margin: 20px 0;
-        }
-
-        .waveform span {
-            width: 4px;
-            background: #667eea;
-            border-radius: 2px;
-            animation: wave 1s infinite ease-in-out;
-        }
-
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .conversation { background: rgba(0,0,0,0.3); border-radius: 15px; padding: 20px; max-height: 300px; overflow-y: auto; margin: 20px 0; text-align: left; }
+        .message { margin: 15px 0; padding: 15px; border-radius: 15px; line-height: 1.5; }
+        .message.sarah { background: rgba(102, 126, 234, 0.3); border-left: 4px solid #667eea; }
+        .message.customer { background: rgba(0, 200, 83, 0.2); border-right: 4px solid #00c853; }
+        .message-label { font-size: 12px; color: #888; margin-bottom: 5px; }
+        .waveform { display: flex; justify-content: center; align-items: center; gap: 5px; height: 40px; margin: 20px 0; }
+        .waveform span { width: 4px; background: #667eea; border-radius: 2px; animation: wave 1s infinite ease-in-out; }
         .waveform span:nth-child(1) { height: 20px; animation-delay: 0s; }
         .waveform span:nth-child(2) { height: 30px; animation-delay: 0.1s; }
         .waveform span:nth-child(3) { height: 40px; animation-delay: 0.2s; }
         .waveform span:nth-child(4) { height: 30px; animation-delay: 0.3s; }
         .waveform span:nth-child(5) { height: 20px; animation-delay: 0.4s; }
-
-        @keyframes wave {
-            0%, 100% { transform: scaleY(0.5); }
-            50% { transform: scaleY(1); }
-        }
-
-        .controls {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
+        @keyframes wave { 0%, 100% { transform: scaleY(0.5); } 50% { transform: scaleY(1); } }
+        .controls { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
         .control-btn {
             background: rgba(255,255,255,0.1);
             border: 2px solid rgba(255,255,255,0.3);
@@ -239,96 +106,21 @@
             font-size: 16px;
             transition: all 0.3s ease;
         }
-
-        .control-btn:hover {
-            background: rgba(255,255,255,0.2);
-        }
-
-        .control-btn.recording {
-            background: #ff4444;
-            border-color: #ff4444;
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        .status {
-            color: #888;
-            margin: 10px 0;
-            font-size: 14px;
-        }
-
-        .appointment-form {
-            display: none;
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .appointment-form.active {
-            display: block;
-        }
-
-        .time-slots {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin: 20px 0;
-        }
-
-        .time-slot {
-            background: rgba(255,255,255,0.1);
-            border: 2px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .time-slot:hover, .time-slot.selected {
-            background: #00c853;
-            border-color: #00c853;
-        }
-
-        .confirm-btn {
-            background: linear-gradient(135deg, #ffd700, #ffaa00);
-            color: #1a1a2e;
-            border: none;
-            padding: 15px 40px;
-            font-size: 18px;
-            border-radius: 50px;
-            cursor: pointer;
-            margin-top: 20px;
-            font-weight: bold;
-        }
-
-        .confirmed {
-            display: none;
-            text-align: center;
-            padding: 40px;
-        }
-
-        .confirmed.active {
-            display: block;
-        }
-
-        .confirmed-icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            color: #666;
-            font-size: 12px;
-        }
+        .control-btn:hover { background: rgba(255,255,255,0.2); }
+        .control-btn.recording { background: #ff4444; border-color: #ff4444; animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        .status { color: #888; margin: 10px 0; font-size: 14px; }
+        .appointment-form { display: none; background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; margin: 20px 0; }
+        .appointment-form.active { display: block; }
+        .time-slots { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 20px 0; }
+        .time-slot { background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); color: white; padding: 15px 25px; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; }
+        .time-slot:hover, .time-slot.selected { background: #00c853; border-color: #00c853; }
+        .confirm-btn { background: linear-gradient(135deg, #ffd700, #ffaa00); color: #1a1a2e; border: none; padding: 15px 40px; font-size: 18px; border-radius: 50px; cursor: pointer; margin-top: 20px; font-weight: bold; }
+        .confirmed { display: none; text-align: center; padding: 40px; }
+        .confirmed.active { display: block; }
+        .confirmed-icon { font-size: 80px; margin-bottom: 20px; }
+        .footer { text-align: center; margin-top: 30px; color: #666; font-size: 12px; }
+        .text-input-container { margin: 15px 0; }
     </style>
 </head>
 <body>
@@ -344,7 +136,6 @@
             <p style="color: #888;">Congratulations</p>
             <div class="winner-name" id="winnerName">Loading...</div>
             <div class="prize-text">Come in to redeem your prize!</div>
-
             <div class="offers">
                 <div class="offer-item">
                     <span class="offer-icon">🔥</span>
@@ -359,7 +150,6 @@
                     <span class="offer-text"><strong>Special Prize</strong><br><small>See what you've won in person!</small></span>
                 </div>
             </div>
-
             <button class="talk-to-sarah" id="talkToSarahBtn" onclick="startConversation()">
                 🎤 Talk to Sarah - Redeem Your Prize
             </button>
@@ -369,34 +159,19 @@
             <div class="sarah-avatar">🤖</div>
             <h2 style="color: #667eea;">Sarah - AI Assistant</h2>
             <p class="status" id="status">Type or tap mic to talk</p>
-
             <div class="waveform" id="waveform" style="display: none;">
                 <span></span><span></span><span></span><span></span><span></span>
             </div>
-
-            <div class="conversation" id="conversation">
-                <!-- Messages appear here -->
-            </div>
-
-            <!-- TEXT INPUT - Works on all phones! -->
-            <div class="text-input-container" style="margin: 15px 0;">
+            <div class="conversation" id="conversation"></div>
+            <div class="text-input-container">
                 <input type="text" id="textInput" placeholder="Type your message here..."
-                    style="width: 70%; padding: 15px; border-radius: 25px; border: 2px solid #667eea;
-                    background: rgba(255,255,255,0.1); color: white; font-size: 16px;"
+                    style="width: 70%; padding: 15px; border-radius: 25px; border: 2px solid #667eea; background: rgba(255,255,255,0.1); color: white; font-size: 16px;"
                     onkeypress="if(event.key==='Enter')sendTextMessage()">
-                <button onclick="sendTextMessage()" style="padding: 15px 20px; border-radius: 25px;
-                    background: #667eea; color: white; border: none; cursor: pointer; font-size: 16px;">
-                    Send
-                </button>
+                <button onclick="sendTextMessage()" style="padding: 15px 20px; border-radius: 25px; background: #667eea; color: white; border: none; cursor: pointer; font-size: 16px;">Send</button>
             </div>
-
             <div class="controls">
-                <button class="control-btn" id="micBtn" onclick="toggleRecording()">
-                    🎤 Voice
-                </button>
-                <button class="control-btn" onclick="endConversation()">
-                    ❌ End
-                </button>
+                <button class="control-btn" id="micBtn" onclick="toggleRecording()">🎤 Voice</button>
+                <button class="control-btn" onclick="endConversation()">❌ End</button>
             </div>
         </div>
 
@@ -429,12 +204,8 @@
         // Get name from URL
         const urlParams = new URLSearchParams(window.location.search);
         let customerName = urlParams.get('name') || 'there';
-
-        // Clean up name (replace - with space)
         customerName = customerName.replace(/-/g, ' ');
         const firstName = customerName.split(' ')[0];
-
-        // Display winner name
         document.getElementById('winnerName').textContent = customerName;
 
         // Speech recognition setup
@@ -443,22 +214,19 @@
         let isSarahSpeaking = false;
         let conversationHistory = [];
 
-        // Check for Web Speech API support
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
         if (!SpeechRecognition) {
             document.getElementById('talkToSarahBtn').textContent = '🎤 Browser Voice Not Supported';
         } else {
             recognition = new SpeechRecognition();
-            recognition.continuous = true; // Keep listening continuously
+            recognition.continuous = true;
             recognition.interimResults = true;
             recognition.lang = 'en-US';
 
             recognition.onresult = (event) => {
                 const result = event.results[event.results.length - 1];
                 const transcript = result[0].transcript.trim();
-
-                // Only process if final result AND Sarah isn't speaking
                 if (result.isFinal && transcript && !isSarahSpeaking) {
                     processCustomerMessage(transcript);
                 }
@@ -467,14 +235,12 @@
             recognition.onerror = (event) => {
                 console.error('Speech recognition error:', event.error);
                 document.getElementById('status').textContent = 'Error: ' + event.error;
-                // Auto-restart on error
                 if (isRecording && !isSarahSpeaking) {
                     setTimeout(() => { try { recognition.start(); } catch(e) {} }, 1000);
                 }
             };
 
             recognition.onend = () => {
-                // Auto-restart if still recording and Sarah isn't speaking
                 if (isRecording && !isSarahSpeaking) {
                     setTimeout(() => {
                         try { recognition.start(); }
@@ -484,18 +250,14 @@
             };
         }
 
-        // Text-to-speech function - Using ResponsiveVoice for natural female voice
+        // Text-to-speech - Using ResponsiveVoice
         function speak(text, callback) {
-            // Sarah is now speaking - stop listening
             isSarahSpeaking = true;
             document.getElementById('status').textContent = 'Sarah is speaking...';
 
-            // Check if ResponsiveVoice is available (more natural voice)
             if (typeof ResponsiveVoice !== 'undefined') {
                 ResponsiveVoice.speak(text, "US English Female", {
-                    pitch: 1,
-                    rate: 1,
-                    volume: 1,
+                    pitch: 1, rate: 1, volume: 1,
                     onend: () => {
                         isSarahSpeaking = false;
                         document.getElementById('status').textContent = isRecording ? 'Listening...' : 'Tap mic to talk';
@@ -503,20 +265,10 @@
                     }
                 });
             } else {
-                // Fallback to native SpeechSynthesis
                 const utterance = new SpeechSynthesisUtterance(text);
-                utterance.rate = 1;
-                utterance.pitch = 1;
-                utterance.volume = 1;
-                // Try to find a female voice
+                utterance.rate = 1; utterance.pitch = 1; utterance.volume = 1;
                 const voices = speechSynthesis.getVoices();
-                const femaleVoice = voices.find(v =>
-                    v.name.includes('Female') ||
-                    v.name.includes('Samantha') ||
-                    v.name.includes('Victoria') ||
-                    v.name.includes('Karen') ||
-                    v.lang.startsWith('en-US')
-                ) || voices[0];
+                const femaleVoice = voices.find(v => v.name.includes('Female') || v.name.includes('Samantha') || v.lang.startsWith('en-US')) || voices[0];
                 utterance.voice = femaleVoice;
                 utterance.onend = () => {
                     isSarahSpeaking = false;
@@ -527,7 +279,6 @@
             }
         }
 
-        // Load voices for fallback
         if (speechSynthesis.onvoiceschanged !== undefined) {
             speechSynthesis.onvoiceschanged = () => {};
         }
@@ -537,7 +288,7 @@
             document.getElementById('winnerCard').style.display = 'none';
             document.getElementById('voiceContainer').classList.add('active');
 
-            // Sarah greets by name - emphasizing customer WON and needs to REDEEM
+            // Sarah greets by name - NO TEST DRIVE - REDEEM PRIZE!
             const greeting = `Hi ${firstName}! Congratulations! You've won a scratch and win prize from GT Auto Sales! I'm Sarah, and I'm here to help you redeem your prize in person. Would you like to schedule a time to come in and claim your reward this Saturday?`;
 
             addMessage('sarah', greeting);
@@ -545,19 +296,15 @@
 
             // Auto-start listening after Sarah finishes greeting
             setTimeout(() => {
-                if (!isRecording) {
-                    toggleRecording();
-                }
-            }, 4000); // Wait 4 seconds for greeting to finish
+                if (!isRecording) toggleRecording();
+            }, 4000);
         }
 
-        // Toggle recording
         function toggleRecording() {
             if (!recognition) {
                 document.getElementById('status').textContent = 'Voice not supported';
                 return;
             }
-
             if (isRecording) {
                 isRecording = false;
                 try { recognition.stop(); } catch(e) {}
@@ -580,25 +327,19 @@
             }
         }
 
-        // Send text message - WORKS ON ALL PHONES!
         function sendTextMessage() {
             const input = document.getElementById('textInput');
             const message = input.value.trim();
             if (!message) return;
-
             processCustomerMessage(message);
             input.value = '';
         }
 
-        // Process customer message
         async function processCustomerMessage(message) {
             addMessage('customer', message);
             document.getElementById('status').textContent = 'Sarah is thinking...';
-
-            // Add to conversation history
             conversationHistory.push({ role: 'user', content: message });
 
-            // Call Sarah AI
             try {
                 const response = await fetch('/api/sarah/chat', {
                     method: 'POST',
@@ -617,34 +358,28 @@
                 speak(sarahResponse);
                 conversationHistory.push({ role: 'assistant', content: sarahResponse });
 
-                // Check if appointment form should show
                 if (data.showAppointmentForm) {
                     document.getElementById('appointmentForm').classList.add('active');
                 }
-
                 document.getElementById('status').textContent = 'Conversation active';
             } catch (error) {
                 console.error('Error calling Sarah AI:', error);
-                const fallback = "I'm sorry, I didn't catch that. Would you like to schedule a test drive this Saturday?";
+                // FIXED: NO TEST DRIVE - REDEEM PRIZE!
+                const fallback = "I'm sorry, I didn't catch that. Would you like to schedule a time to redeem your prize this Saturday?";
                 addMessage('sarah', fallback);
                 speak(fallback);
             }
         }
 
-        // Add message to conversation
         function addMessage(sender, text) {
             const conv = document.getElementById('conversation');
             const msg = document.createElement('div');
             msg.className = `message ${sender}`;
-            msg.innerHTML = `
-                <div class="message-label">${sender === 'sarah' ? '🤖 Sarah' : '👤 You'}</div>
-                ${text}
-            `;
+            msg.innerHTML = `<div class="message-label">${sender === 'sarah' ? '🤖 Sarah' : '👤 You'}</div>${text}`;
             conv.appendChild(msg);
             conv.scrollTop = conv.scrollHeight;
         }
 
-        // Select time slot
         function selectTime(element, time) {
             document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
             element.classList.add('selected');
@@ -652,10 +387,8 @@
             document.getElementById('selectedTime').dataset.time = time;
         }
 
-        // Confirm appointment
         async function confirmAppointment() {
             const selectedTime = document.getElementById('selectedTime').dataset.time || '10 AM';
-
             const response = await fetch('/api/appointments/book', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -665,33 +398,25 @@
                     date: 'Saturday'
                 })
             });
-
             const data = await response.json();
-
             if (data.success) {
                 document.getElementById('voiceContainer').style.display = 'none';
                 document.getElementById('appointmentForm').style.display = 'none';
                 document.getElementById('confirmedView').classList.add('active');
                 document.getElementById('confirmedTime').textContent = `📅 ${selectedTime} - Saturday`;
-
                 const confirmMsg = `Perfect! Your appointment is confirmed for ${selectedTime} this Saturday. We look forward to seeing you, ${firstName}!`;
                 speak(confirmMsg);
             }
         }
 
-        // End conversation
         function endConversation() {
             isRecording = false;
             if (recognition) recognition.stop();
             speechSynthesis.cancel();
-
             const goodbye = "Thank you for visiting GT Auto Sales! Feel free to call us if you have any questions. Have a great day!";
             addMessage('sarah', goodbye);
             speak(goodbye);
-
-            setTimeout(() => {
-                window.location.reload();
-            }, 3000);
+            setTimeout(() => { window.location.reload(); }, 3000);
         }
     </script>
 <style>
