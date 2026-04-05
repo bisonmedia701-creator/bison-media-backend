@@ -38,94 +38,94 @@ const VoiceResponse = twilio.twiml.VoiceResponse;
 
 const BASE_URL = process.env.BASE_URL || 'https://bison-media-backend.onrender.com';
 
-// Landing page with Call Me button
+// Landing page with phone number input + Call button
 app.get('/call/:name', (req, res) => {
     const name = req.params.name.replace(/-/g, ' ');
     res.send(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <style>
-                body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: linear-gradient(135deg, #1a1a2e, #16213e); min-height: 100vh; color: white; }
-                .container { max-width: 500px; margin: 0 auto; }
-                h1 { color: #00d4ff; margin-bottom: 10px; }
-                .prize { font-size: 3rem; margin: 30px 0; }
-                .btn { background: #00d4ff; color: #1a1a2e; padding: 20px 50px; font-size: 1.5rem; border: none; border-radius: 50px; cursor: pointer; text-decoration: none; display: inline-block; margin: 20px 0; }
-                .btn:hover { background: #00ff88; }
-                .hidden { display: none; }
-                .success { background: #00ff88; color: #1a1a2e; padding: 30px; border-radius: 20px; margin-top: 30px; }
-                .note { color: #888; margin-top: 20px; font-size: 0.9rem; }
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <h1>🎉 Congratulations, ${name}!</h1>
-                <p>You've won a <strong>Scratch & Win Prize</strong> from GT Auto Sales!</p>
-                <div class="prize">🚗🏆🎁</div>
-                <p>Click below to claim your prize and schedule your test drive!</p>
-                <button class="btn" onclick="callMe()">📞 Call Me Now</button>
-                <div id="success" class="hidden success">
-                    <h2>✓ Sarah is calling you!</h2>
-                    <p>Answer your phone to speak with Sarah.</p>
-                </div>
-                <div id="error" class="hidden" style="color: #ff4444; margin-top: 20px;">
-                    <p>Please enter your phone number below:</p>
-                    <input type="tel" id="phone" placeholder="+1 555-123-4567" style="padding: 15px; font-size: 1rem; border-radius: 10px; width: 80%;">
-                    <br><br>
-                    <button class="btn" onclick="callWithPhone()">📞 Call Me</button>
-                </div>
-                <p class="note">Sarah will call you and schedule your appointment!</p>
-            </div>
-            <script>
-                async function callMe() {
-                    try {
-                        const response = await fetch('/api/call/${req.params.name}');
-                        const data = await response.json();
-                        if (data.success) {
-                            document.getElementById('success').classList.remove('hidden');
-                            document.querySelector('.btn').style.display = 'none';
-                        } else if (data.needsPhone) {
-                            document.getElementById('error').classList.remove('hidden');
-                            document.querySelector('.btn').style.display = 'none';
-                        }
-                    } catch (e) {
-                        document.getElementById('error').classList.remove('hidden');
-                        document.querySelector('.btn').style.display = 'none';
-                    }
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 30px; background: linear-gradient(135deg, #1a1a2e, #16213e); min-height: 100vh; color: white; margin: 0; }
+        .container { max-width: 500px; margin: 0 auto; }
+        h1 { color: #00d4ff; margin-bottom: 10px; font-size: 2rem; }
+        .prize { font-size: 4rem; margin: 20px 0; }
+        .card { background: rgba(255,255,255,0.1); padding: 30px; border-radius: 20px; margin: 20px 0; }
+        .phone-input { width: 100%; padding: 15px; font-size: 1.2rem; border-radius: 10px; border: 2px solid #00d4ff; text-align: center; box-sizing: border-box; }
+        .btn { background: #00d4ff; color: #1a1a2e; padding: 15px 40px; font-size: 1.2rem; border: none; border-radius: 50px; cursor: pointer; width: 100%; margin-top: 15px; font-weight: bold; }
+        .btn:hover { background: #00ff88; }
+        .note { color: #888; font-size: 0.9rem; margin-top: 15px; }
+        .success { background: #00ff88; color: #1a1a2e; padding: 20px; border-radius: 15px; margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Congratulations, ${name}!</h1>
+        <p>You've won a <strong>Scratch & Win Prize</strong> from GT Auto Sales!</p>
+        <div class="prize">🚗🏆🎁</div>
+        
+        <div class="card">
+            <p>Enter your phone number below and Sarah will call you to schedule your appointment!</p>
+            <input type="tel" id="phone" class="phone-input" placeholder="Enter your phone (e.g., +1 555-123-4567)">
+            <button class="btn" onclick="callSarah()">📞 Sarah, Call Me Now!</button>
+            <p class="note">Sarah will call you and greet you by name!</p>
+        </div>
+        
+        <div id="success" style="display:none;" class="success">
+            <h2>✓ Sarah is calling you now!</h2>
+            <p>Answer your phone to speak with Sarah.</p>
+        </div>
+        
+        <div id="error" style="display:none; color: #ff4444; margin-top: 15px;"></div>
+    </div>
+    
+    <script>
+        async function callSarah() {
+            const phone = document.getElementById('phone').value;
+            if (!phone || phone.length < 10) {
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('error').textContent = 'Please enter a valid phone number';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/call/${req.params.name}', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: phone })
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.querySelector('.card').style.display = 'none';
+                    document.getElementById('success').style.display = 'block';
+                } else {
+                    document.getElementById('error').style.display = 'block';
+                    document.getElementById('error').textContent = 'Error: ' + (data.error || 'Please try again');
                 }
-                async function callWithPhone() {
-                    const phone = document.getElementById('phone').value;
-                    if (!phone) return alert('Please enter your phone number');
-                    await fetch('/api/call/${req.params.name}', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ phone: phone })
-                    });
-                    document.getElementById('error').innerHTML = '<div class="success"><h2>✓ Sarah is calling ' + phone + '!</h2><p>Answer your phone!</p></div>';
-                }
-            </script>
-        </body>
-        </html>
+            } catch (e) {
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('error').textContent = 'Connection error. Please try again.';
+            }
+        }
+    </script>
+</body>
+</html>
     `);
 });
 
-// Initiate call to contact
+// Initiate call - Sarah CALLS the person
 app.post('/api/call/:name', async (req, res) => {
     const name = req.params.name.replace(/-/g, ' ');
-    let phone = req.body.phone;
+    const phone = req.body.phone;
 
     if (!phone) {
-        // Look up phone from contacts
-        const contact = contacts.find(c => c.name.toLowerCase() === name.toLowerCase());
-        if (contact && contact.phone) {
-            phone = contact.phone;
-        } else {
-            return res.json({ success: false, needsPhone: true });
-        }
+        return res.json({ success: false, error: 'Phone number required' });
     }
 
     try {
+        // Sarah calls the person
         await twilioClient.calls.create({
             url: `${BASE_URL}/voice/greet?name=${encodeURIComponent(name)}`,
             to: phone,
@@ -137,13 +137,13 @@ app.post('/api/call/:name', async (req, res) => {
     }
 });
 
-// Sarah greets by name
+// Sarah greets by NAME
 app.post('/voice/greet', (req, res) => {
     const name = req.query.name || 'there';
     const twiml = new VoiceResponse();
 
     twiml.say({ voice: 'alice' },
-        `Hi ${name}! This is Sarah from GT Auto Sales. Congratulations on your scratch and win prize! I'm calling to help you schedule your test drive. Is this a good time to talk? Press 1 for yes, or press 2 to schedule a callback.`);
+        `Hi ${name}! This is Sarah from GT Auto Sales. Congratulations on your scratch and win prize! I'm calling to help you schedule your test drive. Is this a good time to talk? Press 1 for yes, or press 2 for a callback.`);
 
     twiml.gather({
         input: 'dtmf',
@@ -158,7 +158,6 @@ app.post('/voice/greet', (req, res) => {
 app.post('/voice/respond', (req, res) => {
     const twiml = new VoiceResponse();
     const digit = req.body.Digits;
-    const name = req.body.name || 'there';
 
     if (digit === '1') {
         twiml.say({ voice: 'alice' },
@@ -195,18 +194,17 @@ app.post('/voice/book', async (req, res) => {
     if (from) {
         try {
             await twilioClient.messages.create({
-                body: `Your GT Auto appointment is confirmed for ${timeSlot} Saturday! Visit: https://4u95lgtba68e.space.minimax.io`,
+                body: `Your GT Auto appointment is confirmed for ${timeSlot} Saturday! https://4u95lgtba68e.space.minimax.io`,
                 from: process.env.TWILIO_PHONE_NUMBER,
                 to: from
             });
-        } catch (e) { console.log('SMS error:', e.message); }
+        } catch (e) {}
     }
 
     twiml.hangup();
     res.type('text/xml').send(twiml.toString());
 });
 
-// API Routes
 app.get('/api/appointments', (req, res) => res.json({ appointments }));
 app.get('/api/contacts', (req, res) => res.json({ contacts }));
 
@@ -222,8 +220,7 @@ app.post('/api/contacts/upload', upload.single('file'), async (req, res) => {
 
     for (const contact of contacts) {
         const safeName = contact.name.replace(/\s+/g, '-');
-        const qrUrl = `${BASE_URL}/call/${safeName}`;
-        await QRCode.toFile(`qrcodes/${safeName}.png`, qrUrl, { width: 400, margin: 2 });
+        await QRCode.toFile(`qrcodes/${safeName}.png`, `${BASE_URL}/call/${safeName}`, { width: 400, margin: 2 });
     }
 
     res.json({ success: true, count: contacts.length });
