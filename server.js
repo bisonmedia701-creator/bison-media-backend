@@ -16,7 +16,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/qrcodes', express.static('qrcodes'));
-app.use(express.static('public'));
 
 ['uploads', 'qrcodes', 'data'].forEach(dir => {
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
@@ -38,59 +37,44 @@ const twilioClient = twilio(
 const VoiceResponse = twilio.twiml.VoiceResponse;
 
 const BASE_URL = process.env.BASE_URL || 'https://bison-media-backend.onrender.com';
-const TWILIO_PHONE = process.env.TWILIO_PHONE_NUMBER || '+18883089827';
+const TWILIO_PHONE = '+18883089827';
 
-// LANDING PAGE - Click to call Sarah
+// AUTO-CALL PAGE - No button, auto dials Sarah when page loads
 app.get('/call/:name', (req, res) => {
     const name = req.params.name.replace(/-/g, ' ');
-    
+
     res.send(`
 <!DOCTYPE html>
 <html>
 <head>
+    <meta http-equiv="refresh" content="0;url=tel:${TWILIO_PHONE}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 30px; background: linear-gradient(135deg, #1a1a2e, #16213e); min-height: 100vh; color: white; margin: 0; }
-        .container { max-width: 500px; margin: 0 auto; }
-        h1 { color: #00d4ff; font-size: 2rem; }
-        .prize { font-size: 5rem; margin: 20px 0; }
-        .card { background: rgba(255,255,255,0.1); padding: 30px; border-radius: 20px; margin: 20px 0; }
-        .call-btn { display: block; background: #00ff88; color: #1a1a2e; padding: 25px 40px; font-size: 1.5rem; border-radius: 50px; text-decoration: none; font-weight: bold; margin: 20px 0; box-shadow: 0 4px 15px rgba(0,255,136,0.3); }
-        .call-btn:hover { transform: scale(1.05); }
-        .note { color: #888; margin-top: 15px; }
-        .small { font-size: 0.9rem; color: #666; margin-top: 30px; }
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: linear-gradient(135deg, #1a1a2e, #16213e); min-height: 100vh; color: white; margin: 0; }
+        .container { max-width: 400px; margin: 0 auto; }
+        h1 { color: #00d4ff; font-size: 1.5rem; }
+        .spinner { border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid #00d4ff; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 30px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .note { color: #888; font-size: 0.9rem; margin-top: 20px; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🎉 Congratulations, ${name}!</h1>
-        <p>You've won a <strong>Scratch & Win Prize</strong> from GT Auto Sales!</p>
-        <div class="prize">🚗🏆🎁</div>
-        
-        <div class="card">
-            <p>Tap the button below to connect with Sarah!</p>
-            
-            <a href="tel:${TWILIO_PHONE}?name=${req.params.name}" class="call-btn">
-                📞 Tap to Call Sarah Now
-            </a>
-            
-            <p class="note">Sarah will greet you by name and help schedule your test drive!</p>
-        </div>
-        
-        <p class="small">Sarah is waiting to help you claim your prize!</p>
+        <p>Connecting you to Sarah...</p>
+        <div class="spinner"></div>
+        <p>Sarah will greet you by name!</p>
+        <p class="note">If phone doesn't dial automatically, <a href="tel:${TWILIO_PHONE}" style="color:#00d4ff;">click here</a></p>
     </div>
 </body>
 </html>
     `);
 });
 
-// When customer CALLS Sarah
 app.post('/voice/incoming', (req, res) => {
     const twiml = new VoiceResponse();
-    
-    // Get customer name from phone number (caller ID)
-    const callerName = req.query.name || req.body.name || 'there';
-    
+    const callerName = req.query.name || 'there';
+
     twiml.say({ voice: 'alice' },
         `Hi ${callerName}! This is Sarah from GT Auto Sales. Congratulations on your scratch and win prize! I'm calling to help you schedule your test drive. Is this a good time to talk? Press 1 for yes, or press 2 for a callback.`);
 
@@ -110,7 +94,7 @@ app.post('/voice/respond', (req, res) => {
 
     if (digit === '1') {
         twiml.say({ voice: 'alice' },
-            `Great! We have availability this Saturday at 10 AM, 2 PM, or 4 PM. Which time works best for you? Press 1 for 10 AM, press 2 for 2 PM, or press 3 for 4 PM.`);
+            `Great! I'd love to help you book your appointment. We have availability this Saturday at 10 AM, 2 PM, or 4 PM. Which time works best for you? Press 1 for 10 AM, press 2 for 2 PM, or press 3 for 4 PM.`);
 
         twiml.gather({
             input: 'dtmf',
@@ -160,7 +144,7 @@ app.get('/api/contacts', (req, res) => res.json({ contacts }));
 app.post('/api/contacts/upload', upload.single('file'), async (req, res) => {
     const results = [];
     fs.createReadStream(req.file.path).pipe(csvParser()).on('data', d => results.push(d));
-    
+
     contacts = results.map((row, i) => ({
         id: i + 1,
         name: row.firstName || row.FirstName || row.Name || `Person ${i + 1}`,
