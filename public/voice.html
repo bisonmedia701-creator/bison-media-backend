@@ -1,332 +1,60 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GT Auto Sales - Scratch & Win</title>
+    <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            min-height: 100vh;
-            color: white;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .logo {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
-
-        h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            color: #ffd700;
-        }
-
-        .winner-card {
-            background: linear-gradient(145deg, #2d2d44, #1f1f33);
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            border: 2px solid #ffd700;
-            margin-bottom: 30px;
-        }
-
-        .winner-badge {
-            background: linear-gradient(135deg, #ffd700, #ffaa00);
-            color: #1a1a2e;
-            padding: 10px 30px;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 14px;
-            display: inline-block;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .winner-name {
-            font-size: 36px;
-            color: #fff;
-            margin: 20px 0;
-            text-shadow: 0 2px 10px rgba(255,215,0,0.3);
-        }
-
-        .prize-text {
-            color: #88ff88;
-            font-size: 20px;
-            margin: 20px 0;
-        }
-
-        .offers {
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .offer-item {
-            display: flex;
-            align-items: center;
-            margin: 15px 0;
-            text-align: left;
-        }
-
-        .offer-icon {
-            font-size: 24px;
-            margin-right: 15px;
-            width: 40px;
-        }
-
-        .offer-text {
-            font-size: 16px;
-        }
-
-        .talk-to-sarah {
-            background: linear-gradient(135deg, #00c853, #00a843);
-            color: white;
-            border: none;
-            padding: 20px 40px;
-            font-size: 20px;
-            border-radius: 50px;
-            cursor: pointer;
-            width: 100%;
-            margin: 20px 0;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0,200,83,0.3);
-        }
-
-        .talk-to-sarah:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(0,200,83,0.4);
-        }
-
-        .talk-to-sarah:disabled {
-            background: #666;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .voice-container {
-            display: none;
-            background: linear-gradient(145deg, #2d2d44, #1f1f33);
-            border-radius: 20px;
-            padding: 30px;
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .voice-container.active {
-            display: block;
-        }
-
-        .sarah-avatar {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 60px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .conversation {
-            background: rgba(0,0,0,0.3);
-            border-radius: 15px;
-            padding: 20px;
-            max-height: 300px;
-            overflow-y: auto;
-            margin: 20px 0;
-            text-align: left;
-        }
-
-        .message {
-            margin: 15px 0;
-            padding: 15px;
-            border-radius: 15px;
-            line-height: 1.5;
-        }
-
-        .message.sarah {
-            background: rgba(102, 126, 234, 0.3);
-            border-left: 4px solid #667eea;
-        }
-
-        .message.customer {
-            background: rgba(0, 200, 83, 0.2);
-            border-right: 4px solid #00c853;
-        }
-
-        .message-label {
-            font-size: 12px;
-            color: #888;
-            margin-bottom: 5px;
-        }
-
-        .waveform {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            height: 40px;
-            margin: 20px 0;
-        }
-
-        .waveform span {
-            width: 4px;
-            background: #667eea;
-            border-radius: 2px;
-            animation: wave 1s infinite ease-in-out;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh; color: white; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .logo { font-size: 48px; margin-bottom: 10px; }
+        h1 { font-size: 28px; margin-bottom: 10px; color: #ffd700; }
+        .winner-card { background: linear-gradient(145deg, #2d2d44, #1f1f33); border-radius: 20px; padding: 40px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 2px solid #ffd700; margin-bottom: 30px; }
+        .winner-badge { background: linear-gradient(135deg, #ffd700, #ffaa00); color: #1a1a2e; padding: 10px 30px; border-radius: 50px; font-weight: bold; font-size: 14px; display: inline-block; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
+        .winner-name { font-size: 36px; color: #fff; margin: 20px 0; text-shadow: 0 2px 10px rgba(255,215,0,0.3); }
+        .prize-text { color: #88ff88; font-size: 20px; margin: 20px 0; }
+        .offers { background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; margin: 20px 0; }
+        .offer-item { display: flex; align-items: center; margin: 15px 0; text-align: left; }
+        .offer-icon { font-size: 24px; margin-right: 15px; width: 40px; }
+        .offer-text { font-size: 16px; }
+        .talk-to-sarah { background: linear-gradient(135deg, #00c853, #00a843); color: white; border: none; padding: 20px 40px; font-size: 20px; border-radius: 50px; cursor: pointer; width: 100%; margin: 20px 0; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(0,200,83,0.3); }
+        .talk-to-sarah:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0,200,83,0.4); }
+        .voice-container { display: none; background: linear-gradient(145deg, #2d2d44, #1f1f33); border-radius: 20px; padding: 30px; margin: 20px 0; text-align: center; }
+        .voice-container.active { display: block; }
+        .sarah-avatar { width: 120px; height: 120px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 60px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .conversation { background: rgba(0,0,0,0.3); border-radius: 15px; padding: 20px; max-height: 300px; overflow-y: auto; margin: 20px 0; text-align: left; }
+        .message { margin: 15px 0; padding: 15px; border-radius: 15px; line-height: 1.5; }
+        .message.sarah { background: rgba(102, 126, 234, 0.3); border-left: 4px solid #667eea; }
+        .message.customer { background: rgba(0, 200, 83, 0.2); border-right: 4px solid #00c853; }
+        .message-label { font-size: 12px; color: #888; margin-bottom: 5px; }
+        .waveform { display: flex; justify-content: center; align-items: center; gap: 5px; height: 40px; margin: 20px 0; }
+        .waveform span { width: 4px; background: #667eea; border-radius: 2px; animation: wave 1s infinite ease-in-out; }
         .waveform span:nth-child(1) { height: 20px; animation-delay: 0s; }
         .waveform span:nth-child(2) { height: 30px; animation-delay: 0.1s; }
         .waveform span:nth-child(3) { height: 40px; animation-delay: 0.2s; }
         .waveform span:nth-child(4) { height: 30px; animation-delay: 0.3s; }
         .waveform span:nth-child(5) { height: 20px; animation-delay: 0.4s; }
-
-        @keyframes wave {
-            0%, 100% { transform: scaleY(0.5); }
-            50% { transform: scaleY(1); }
-        }
-
-        .controls {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .control-btn {
-            background: rgba(255,255,255,0.1);
-            border: 2px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 15px 30px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .control-btn:hover {
-            background: rgba(255,255,255,0.2);
-        }
-
-        .control-btn.recording {
-            background: #ff4444;
-            border-color: #ff4444;
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        .status {
-            color: #888;
-            margin: 10px 0;
-            font-size: 14px;
-        }
-
-        .appointment-form {
-            display: none;
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .appointment-form.active {
-            display: block;
-        }
-
-        .time-slots {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin: 20px 0;
-        }
-
-        .time-slot {
-            background: rgba(255,255,255,0.1);
-            border: 2px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .time-slot:hover, .time-slot.selected {
-            background: #00c853;
-            border-color: #00c853;
-        }
-
-        .confirm-btn {
-            background: linear-gradient(135deg, #ffd700, #ffaa00);
-            color: #1a1a2e;
-            border: none;
-            padding: 15px 40px;
-            font-size: 18px;
-            border-radius: 50px;
-            cursor: pointer;
-            margin-top: 20px;
-            font-weight: bold;
-        }
-
-        .confirmed {
-            display: none;
-            text-align: center;
-            padding: 40px;
-        }
-
-        .confirmed.active {
-            display: block;
-        }
-
-        .confirmed-icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            color: #666;
-            font-size: 12px;
-        }
+        @keyframes wave { 0%, 100% { transform: scaleY(0.5); } 50% { transform: scaleY(1); } }
+        .controls { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
+        .control-btn { background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); color: white; padding: 15px 30px; border-radius: 50px; cursor: pointer; font-size: 16px; transition: all 0.3s ease; }
+        .control-btn:hover { background: rgba(255,255,255,0.2); }
+        .control-btn.recording { background: #ff4444; border-color: #ff4444; animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        .status { color: #888; margin: 10px 0; font-size: 14px; }
+        .appointment-form { display: none; background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; margin: 20px 0; }
+        .appointment-form.active { display: block; }
+        .time-slots { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 20px 0; }
+        .time-slot { background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); color: white; padding: 15px 25px; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; }
+        .time-slot:hover, .time-slot.selected { background: #00c853; border-color: #00c853; }
+        .confirm-btn { background: linear-gradient(135deg, #ffd700, #ffaa00); color: #1a1a2e; border: none; padding: 15px 40px; font-size: 18px; border-radius: 50px; cursor: pointer; margin-top: 20px; font-weight: bold; }
+        .confirmed { display: none; text-align: center; padding: 40px; }
+        .confirmed.active { display: block; }
+        .confirmed-icon { font-size: 80px; margin-bottom: 20px; }
+        .footer { text-align: center; margin-top: 30px; color: #666; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -342,47 +70,23 @@
             <p style="color: #888;">Congratulations</p>
             <div class="winner-name" id="winnerName">Loading...</div>
             <div class="prize-text">Come in to redeem your prize!</div>
-
             <div class="offers">
-                <div class="offer-item">
-                    <span class="offer-icon">🔥</span>
-                    <span class="offer-text"><strong>0% APR Financing</strong><br><small>On select models for qualified buyers</small></span>
-                </div>
-                <div class="offer-item">
-                    <span class="offer-icon">💰</span>
-                    <span class="offer-text"><strong>Trade-In Bonus</strong><br><small>Up to $2,000 extra for your trade-in</small></span>
-                </div>
-                <div class="offer-item">
-                    <span class="offer-icon">🎁</span>
-                    <span class="offer-text"><strong>Special Prize</strong><br><small>See what you've won in person!</small></span>
-                </div>
+                <div class="offer-item"><span class="offer-icon">🔥</span><span class="offer-text"><strong>0% APR Financing</strong><br><small>On select models for qualified buyers</small></span></div>
+                <div class="offer-item"><span class="offer-icon">💰</span><span class="offer-text"><strong>Trade-In Bonus</strong><br><small>Up to $2,000 extra for your trade-in</small></span></div>
+                <div class="offer-item"><span class="offer-icon">🎁</span><span class="offer-text"><strong>Special Prize</strong><br><small>See what you've won in person!</small></span></div>
             </div>
-
-            <button class="talk-to-sarah" id="talkToSarahBtn" onclick="startConversation()">
-                🎤 Talk to Sarah - Redeem Your Prize
-            </button>
+            <button class="talk-to-sarah" id="talkToSarahBtn" onclick="startConversation()">🎤 Talk to Sarah - Redeem Your Prize</button>
         </div>
 
         <div class="voice-container" id="voiceContainer">
             <div class="sarah-avatar">🤖</div>
             <h2 style="color: #667eea;">Sarah - AI Assistant</h2>
             <p class="status" id="status">Click the microphone to start talking</p>
-
-            <div class="waveform" id="waveform" style="display: none;">
-                <span></span><span></span><span></span><span></span><span></span>
-            </div>
-
-            <div class="conversation" id="conversation">
-                <!-- Messages appear here -->
-            </div>
-
+            <div class="waveform" id="waveform" style="display: none;"><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="conversation" id="conversation"></div>
             <div class="controls">
-                <button class="control-btn" id="micBtn" onclick="toggleRecording()">
-                    🎤 Start Talking
-                </button>
-                <button class="control-btn" onclick="endConversation()">
-                    ❌ End
-                </button>
+                <button class="control-btn" id="micBtn" onclick="toggleRecording()">🎤 Start Talking</button>
+                <button class="control-btn" onclick="endConversation()">❌ End</button>
             </div>
         </div>
 
@@ -412,153 +116,96 @@
     </div>
 
     <script>
-        // Get name from URL
         const urlParams = new URLSearchParams(window.location.search);
         let customerName = urlParams.get('name') || 'there';
-
-        // Clean up name (replace - with space)
         customerName = customerName.replace(/-/g, ' ');
         const firstName = customerName.split(' ')[0];
-
-        // Display winner name
         document.getElementById('winnerName').textContent = customerName;
 
-        // Speech recognition setup
         let recognition = null;
         let isRecording = false;
         let conversationHistory = [];
-
-        // Check for Web Speech API support
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
         if (!SpeechRecognition) {
-            document.getElementById('talkToSarahBtn').textContent = '🎤 Browser Voice Not Supported - Call Sarah Instead';
-            document.getElementById('talkToSarahBtn').onclick = () => {
-                window.location.href = `tel:+18883089827`;
-            };
+            document.getElementById('talkToSarahBtn').textContent = '🎤 Browser Voice Not Supported';
         } else {
             recognition = new SpeechRecognition();
             recognition.continuous = false;
             recognition.interimResults = true;
             recognition.lang = 'en-US';
-
             recognition.onresult = (event) => {
                 const transcript = event.results[event.results.length - 1][0].transcript;
-                if (event.results[event.results.length - 1].isFinal) {
-                    processCustomerMessage(transcript);
-                }
+                if (event.results[event.results.length - 1].isFinal) processCustomerMessage(transcript);
             };
-
-            recognition.onerror = (event) => {
-                console.error('Speech recognition error:', event.error);
-                document.getElementById('status').textContent = 'Error: ' + event.error;
-            };
-
-            recognition.onend = () => {
-                if (isRecording) {
-                    recognition.start();
-                }
-            };
+            recognition.onerror = (event) => { document.getElementById('status').textContent = 'Error: ' + event.error; };
+            recognition.onend = () => { if (isRecording) recognition.start(); };
         }
 
-        // Text-to-speech function
-        function speak(text) {
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = 1;
-            utterance.pitch = 1;
-            utterance.volume = 1;
-            speechSynthesis.speak(utterance);
+        function speak(text, callback) {
+            if (typeof ResponsiveVoice !== 'undefined') {
+                ResponsiveVoice.speak(text, "US English Female", { pitch: 1, rate: 1, volume: 1, onend: callback });
+            } else {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 1; utterance.pitch = 1; utterance.volume = 1;
+                const voices = speechSynthesis.getVoices();
+                utterance.voice = voices.find(v => v.name.includes('Female') || v.lang.startsWith('en-US')) || voices[0];
+                utterance.onend = callback;
+                speechSynthesis.speak(utterance);
+            }
         }
 
-        // Start conversation with Sarah
         function startConversation() {
             document.getElementById('winnerCard').style.display = 'none';
             document.getElementById('voiceContainer').classList.add('active');
-
-            // Sarah greets by name - emphasizing customer WON and needs to REDEEM
             const greeting = `Hi ${firstName}! Congratulations! You've won a scratch and win prize from GT Auto Sales! I'm Sarah, and I'm here to help you redeem your prize in person. Would you like to schedule a time to come in and claim your reward this Saturday?`;
-
             addMessage('sarah', greeting);
             speak(greeting);
             document.getElementById('status').textContent = 'Sarah is speaking...';
         }
 
-        // Toggle recording
         function toggleRecording() {
             if (!recognition) return;
-
             if (isRecording) {
-                isRecording = false;
-                recognition.stop();
+                isRecording = false; recognition.stop();
                 document.getElementById('micBtn').textContent = '🎤 Start Talking';
                 document.getElementById('micBtn').classList.remove('recording');
                 document.getElementById('waveform').style.display = 'none';
-                document.getElementById('status').textContent = 'Listening ended';
             } else {
-                isRecording = true;
-                recognition.start();
+                isRecording = true; recognition.start();
                 document.getElementById('micBtn').textContent = '⏹️ Stop';
                 document.getElementById('micBtn').classList.add('recording');
                 document.getElementById('waveform').style.display = 'flex';
-                document.getElementById('status').textContent = 'Listening...';
             }
         }
 
-        // Process customer message
         async function processCustomerMessage(message) {
             addMessage('customer', message);
             document.getElementById('status').textContent = 'Sarah is thinking...';
-
-            // Add to conversation history
             conversationHistory.push({ role: 'user', content: message });
-
-            // Call Sarah AI
             try {
                 const response = await fetch('/api/sarah/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        message: message,
-                        customerName: firstName,
-                        history: conversationHistory
-                    })
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message, customerName: firstName, history: conversationHistory })
                 });
-
                 const data = await response.json();
-                const sarahResponse = data.response;
-
-                addMessage('sarah', sarahResponse);
-                speak(sarahResponse);
-                conversationHistory.push({ role: 'assistant', content: sarahResponse });
-
-                // Check if appointment form should show
-                if (data.showAppointmentForm) {
-                    document.getElementById('appointmentForm').classList.add('active');
-                }
-
-                document.getElementById('status').textContent = 'Conversation active';
+                addMessage('sarah', data.response);
+                speak(data.response);
+                conversationHistory.push({ role: 'assistant', content: data.response });
+                if (data.showAppointmentForm) document.getElementById('appointmentForm').classList.add('active');
             } catch (error) {
-                console.error('Error calling Sarah AI:', error);
-                const fallback = "I'm sorry, I didn't catch that. Would you like to schedule a test drive this Saturday?";
+                const fallback = "I'm sorry, I didn't catch that. Would you like to schedule a time to redeem your prize this Saturday?";
                 addMessage('sarah', fallback);
                 speak(fallback);
             }
         }
 
-        // Add message to conversation
         function addMessage(sender, text) {
             const conv = document.getElementById('conversation');
-            const msg = document.createElement('div');
-            msg.className = `message ${sender}`;
-            msg.innerHTML = `
-                <div class="message-label">${sender === 'sarah' ? '🤖 Sarah' : '👤 You'}</div>
-                ${text}
-            `;
-            conv.appendChild(msg);
+            conv.innerHTML += `<div class="message ${sender}"><div class="message-label">${sender === 'sarah' ? '🤖 Sarah' : '👤 You'}</div>${text}</div>`;
             conv.scrollTop = conv.scrollHeight;
         }
 
-        // Select time slot
         function selectTime(element, time) {
             document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
             element.classList.add('selected');
@@ -566,159 +213,27 @@
             document.getElementById('selectedTime').dataset.time = time;
         }
 
-        // Confirm appointment
         async function confirmAppointment() {
             const selectedTime = document.getElementById('selectedTime').dataset.time || '10 AM';
-
-            const response = await fetch('/api/appointments/book', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    customerName: customerName,
-                    time: selectedTime,
-                    date: 'Saturday'
-                })
+            await fetch('/api/appointments/book', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ customerName, time: selectedTime, date: 'Saturday' })
             });
-
-            const data = await response.json();
-
-            if (data.success) {
-                document.getElementById('voiceContainer').style.display = 'none';
-                document.getElementById('appointmentForm').style.display = 'none';
-                document.getElementById('confirmedView').classList.add('active');
-                document.getElementById('confirmedTime').textContent = `📅 ${selectedTime} - Saturday`;
-
-                const confirmMsg = `Perfect! Your appointment is confirmed for ${selectedTime} this Saturday. We look forward to seeing you, ${firstName}!`;
-                speak(confirmMsg);
-            }
+            document.getElementById('voiceContainer').style.display = 'none';
+            document.getElementById('appointmentForm').style.display = 'none';
+            document.getElementById('confirmedView').classList.add('active');
+            document.getElementById('confirmedTime').textContent = `📅 ${selectedTime} - Saturday`;
+            const confirmMsg = `Perfect! Your appointment is confirmed for ${selectedTime} this Saturday. We look forward to seeing you, ${firstName}!`;
+            speak(confirmMsg);
         }
 
-        // End conversation
         function endConversation() {
             isRecording = false;
             if (recognition) recognition.stop();
             speechSynthesis.cancel();
-
-            const goodbye = "Thank you for visiting GT Auto Sales! Feel free to call us if you have any questions. Have a great day!";
-            addMessage('sarah', goodbye);
-            speak(goodbye);
-
-            setTimeout(() => {
-                window.location.reload();
-            }, 3000);
+            addMessage('sarah', "Thank you for visiting GT Auto Sales! Feel free to call us if you have any questions. Have a great day!");
+            setTimeout(() => window.location.reload(), 3000);
         }
     </script>
-<style>
-#minimax-floating-ball {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  padding: 10px 12px;
-  background: #222222;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  color: #F8F8F8;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  z-index: 9999;
-  transition: all 0.3s ease;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-#minimax-floating-ball:hover {
-  transform: translateY(-2px);
-  background: #383838;
-}
-.minimax-ball-content {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.minimax-logo-wave {
-  width: 20px;
-  height: 20px;
-  background-image: url("data:image/svg+xml,%3Csvg%20preserveAspectRatio%3D%27none%27%20width%3D%27100%25%27%20height%3D%27100%25%27%20overflow%3D%27visible%27%20style%3D%27display%3A%20block%3B%27%20viewBox%3D%270%200%20170.136%20138.225%27%20fill%3D%27none%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%3E%3Cg%20id%3D%27Frame%202116748449%27%3E%3Cpath%20id%3D%27Subtract%27%20d%3D%27M170%20101.783C170%20105.144%20168.49%20108.327%20165.886%20110.453L134.963%20135.702C132.964%20137.334%20130.463%20138.225%20127.883%20138.225H10.4938C4.69824%20138.225%200%20133.527%200%20127.732V39.2289C0%2035.8597%201.51758%2032.6698%204.13162%2030.5442L38.5402%202.56547C40.536%200.942662%2043.0298%200.0567377%2045.602%200.0567377H159.506C165.302%200.0567377%20170%204.75498%20170%2010.5506V101.783Z%27%20fill%3D%27black%27%20style%3D%27fill%3Ablack%3Bfill-opacity%3A1%3B%27/%3E%3Cpath%20id%3D%27Subtract_2%27%20d%3D%27M149.011%2094.4632C149.011%2096.1471%20148.253%2097.7415%20146.946%2098.8043L125.893%20115.936C124.895%20116.748%20123.648%20117.191%20122.361%20117.191H24.6479C22.716%20117.191%2021.15%20115.625%2021.15%20113.693V46.1166C21.15%2044.4267%2021.9135%2042.8274%2023.2274%2041.7648L47.367%2022.2437C48.3638%2021.4376%2049.607%2020.9982%2050.8888%2020.9988L145.514%2021.0427C147.446%2021.0436%20149.011%2022.6094%20149.011%2024.5406V94.4632Z%27%20fill%3D%27white%27%20style%3D%27fill%3Awhite%3Bfill-opacity%3A1%3B%27/%3E%3Cpath%20id%3D%27Rectangle%20111142564%27%20d%3D%27M42.111%2080.8025C42.111%2077.7115%2044.6167%2075.2057%2047.7077%2075.2057H60.9999C64.0908%2075.2057%2066.5966%2077.7115%2066.5966%2080.8025V121.029H42.111V80.8025Z%27%20fill%3D%27black%27%20style%3D%27fill%3Ablack%3Bfill-opacity%3A1%3B%27/%3E%3Cpath%20id%3D%27Rectangle%20111142567%27%20d%3D%27M79.1894%2080.8025C79.1894%2077.7115%2081.6952%2075.2057%2084.7861%2075.2057H98.0783C101.169%2075.2057%20103.675%2077.7115%20103.675%2080.8025V121.029H79.1894V80.8025Z%27%20fill%3D%27black%27%20style%3D%27fill%3Ablack%3Bfill-opacity%3A1%3B%27/%3E%3C/g%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 14px 11px;
-  background-color: #8FD1FF;
-  border-radius: 4px;
-}
-
-.minimax-ball-text {
-  font-size: 12px;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.minimax-close-icon {
-  margin-left: 8px;
-  font-size: 16px;
-  width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  cursor: pointer;
-  opacity: 0.7;
-  transition: opacity 0.2s ease;
-}
-
-.minimax-close-icon:hover {
-  opacity: 1;
-}
-</style>
-<div id="minimax-floating-ball">
-  <div class="minimax-ball-content">
-    <div class="minimax-logo-wave"></div>
-    <span class="minimax-ball-text">Created by MiniMax Agent</span>
-  </div>
-  <div class="minimax-close-icon">×</div>
-</div>
-<script>
-// Initialize floating ball functionality
-function initFloatingBall() {
-  const ball = document.getElementById('minimax-floating-ball');
-  if (!ball) return;
-
-  // Initial animation
-  ball.style.opacity = '0';
-  ball.style.transform = 'translateY(20px)';
-
-  setTimeout(() => {
-    ball.style.opacity = '1';
-    ball.style.transform = 'translateY(0)';
-  }, 500);
-
-  // Handle logo click
-  const ballContent = ball.querySelector('.minimax-ball-content');
-  ballContent.addEventListener('click', function (e) {
-    e.stopPropagation();
-    window.open('https://agent.minimax.io/', '_blank');
-    ball.style.transform = 'scale(0.95)';
-    setTimeout(() => {
-      ball.style.transform = 'scale(1)';
-    }, 100);
-  });
-
-  // Handle close button click
-  const closeIcon = ball.querySelector('.minimax-close-icon');
-  closeIcon.addEventListener('click', function (e) {
-    e.stopPropagation();
-    ball.style.opacity = '0';
-    ball.style.transform = 'translateY(20px)';
-
-    setTimeout(() => {
-      ball.style.display = 'none';
-    }, 300);
-  });
-}
-
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', initFloatingBall); 
-</script>
 </body>
 </html>
