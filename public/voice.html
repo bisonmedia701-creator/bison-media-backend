@@ -2,125 +2,56 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>GT Auto Sales - Scratch & Win</title>
-    <!-- ResponsiveVoice for natural female TTS -->
-    <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            min-height: 100vh;
-            color: white;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .header { text-align: center; margin-bottom: 30px; }
-        .logo { font-size: 48px; margin-bottom: 10px; }
-        h1 { font-size: 28px; margin-bottom: 10px; color: #ffd700; }
-        .winner-card {
-            background: linear-gradient(145deg, #2d2d44, #1f1f33);
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            border: 2px solid #ffd700;
-            margin-bottom: 30px;
-        }
-        .winner-badge {
-            background: linear-gradient(135deg, #ffd700, #ffaa00);
-            color: #1a1a2e;
-            padding: 10px 30px;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 14px;
-            display: inline-block;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        .winner-name { font-size: 36px; color: #fff; margin: 20px 0; text-shadow: 0 2px 10px rgba(255,215,0,0.3); }
-        .prize-text { color: #88ff88; font-size: 20px; margin: 20px 0; }
-        .offers { background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; margin: 20px 0; }
-        .offer-item { display: flex; align-items: center; margin: 15px 0; text-align: left; }
-        .offer-icon { font-size: 24px; margin-right: 15px; width: 40px; }
-        .offer-text { font-size: 16px; }
-        .talk-to-sarah {
-            background: linear-gradient(135deg, #00c853, #00a843);
-            color: white;
-            border: none;
-            padding: 20px 40px;
-            font-size: 20px;
-            border-radius: 50px;
-            cursor: pointer;
-            width: 100%;
-            margin: 20px 0;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0,200,83,0.3);
-        }
-        .talk-to-sarah:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0,200,83,0.4); }
-        .talk-to-sarah:disabled { background: #666; cursor: not-allowed; transform: none; }
-        .voice-container { display: none; background: linear-gradient(145deg, #2d2d44, #1f1f33); border-radius: 20px; padding: 30px; margin: 20px 0; text-align: center; }
-        .voice-container.active { display: block; }
-        .sarah-avatar {
-            width: 120px; height: 120px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 60px;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        .conversation { background: rgba(0,0,0,0.3); border-radius: 15px; padding: 20px; max-height: 300px; overflow-y: auto; margin: 20px 0; text-align: left; }
-        .message { margin: 15px 0; padding: 15px; border-radius: 15px; line-height: 1.5; }
-        .message.sarah { background: rgba(102, 126, 234, 0.3); border-left: 4px solid #667eea; }
-        .message.customer { background: rgba(0, 200, 83, 0.2); border-right: 4px solid #00c853; }
-        .message-label { font-size: 12px; color: #888; margin-bottom: 5px; }
-        .waveform { display: flex; justify-content: center; align-items: center; gap: 5px; height: 40px; margin: 20px 0; }
-        .waveform span { width: 4px; background: #667eea; border-radius: 2px; animation: wave 1s infinite ease-in-out; }
-        .waveform span:nth-child(1) { height: 20px; animation-delay: 0s; }
-        .waveform span:nth-child(2) { height: 30px; animation-delay: 0.1s; }
-        .waveform span:nth-child(3) { height: 40px; animation-delay: 0.2s; }
-        .waveform span:nth-child(4) { height: 30px; animation-delay: 0.3s; }
-        .waveform span:nth-child(5) { height: 20px; animation-delay: 0.4s; }
-        @keyframes wave { 0%, 100% { transform: scaleY(0.5); } 50% { transform: scaleY(1); } }
-        .controls { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
-        .control-btn {
-            background: rgba(255,255,255,0.1);
-            border: 2px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 15px 30px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-        .control-btn:hover { background: rgba(255,255,255,0.2); }
-        .control-btn.recording { background: #ff4444; border-color: #ff4444; animation: blink 1s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
-        .status { color: #888; margin: 10px 0; font-size: 14px; }
-        .appointment-form { display: none; background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; margin: 20px 0; }
-        .appointment-form.active { display: block; }
-        .time-slots { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 20px 0; }
-        .time-slot { background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); color: white; padding: 15px 25px; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; }
-        .time-slot:hover, .time-slot.selected { background: #00c853; border-color: #00c853; }
-        .confirm-btn { background: linear-gradient(135deg, #ffd700, #ffaa00); color: #1a1a2e; border: none; padding: 15px 40px; font-size: 18px; border-radius: 50px; cursor: pointer; margin-top: 20px; font-weight: bold; }
-        .confirmed { display: none; text-align: center; padding: 40px; }
-        .confirmed.active { display: block; }
-        .confirmed-icon { font-size: 80px; margin-bottom: 20px; }
-        .footer { text-align: center; margin-top: 30px; color: #666; font-size: 12px; }
-        .text-input-container { margin: 15px 0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { height: 100%; overflow: auto; -webkit-overflow-scrolling: touch; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; }
+        .container { max-width: 100%; margin: 0 auto; padding: 15px; padding-bottom: 120px; }
+        .tap-screen { background: linear-gradient(145deg, #2d2d44, #1f1f33); border-radius: 20px; padding: 40px 20px; text-align: center; border: 3px solid #00c853; margin: 10px 0; }
+        .tap-icon { font-size: 60px; animation: bounce 1s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        .tap-text { font-size: 24px; color: #00c853; font-weight: bold; margin: 15px 0; }
+        .tap-btn { background: #00c853; color: white; border: none; padding: 20px; font-size: 20px; border-radius: 15px; width: 100%; font-weight: bold; cursor: pointer; }
+        .header { text-align: center; padding: 15px 0; }
+        .logo { font-size: 40px; }
+        .header h1 { font-size: 22px; color: #ffd700; }
+        .header p { color: #888; font-size: 14px; }
+        .winner-section { display: none; text-align: center; margin: 10px 0; }
+        .winner-badge { background: linear-gradient(135deg, #ffd700, #ffaa00); color: #1a1a2e; padding: 10px 20px; border-radius: 25px; font-weight: bold; font-size: 14px; display: inline-block; text-transform: uppercase; }
+        .customer-name { font-size: 28px; margin: 10px 0; }
+        .chat-section { display: none; margin: 10px 0; }
+        .chat-header { background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 15px; padding: 15px; text-align: center; margin-bottom: 10px; }
+        .chat-header .icon { font-size: 30px; }
+        .chat-header .name { font-size: 16px; margin-top: 5px; }
+        .chat-status { text-align: center; padding: 8px; color: #888; font-size: 12px; }
+        .messages { background: rgba(0,0,0,0.3); border-radius: 15px; padding: 10px; max-height: 200px; overflow-y: auto; margin-bottom: 10px; }
+        .msg { margin: 8px 0; padding: 10px; border-radius: 10px; font-size: 14px; line-height: 1.4; }
+        .msg.sarah { background: rgba(102, 126, 234, 0.3); border-left: 3px solid #667eea; }
+        .msg.customer { background: rgba(0, 200, 83, 0.2); border-right: 3px solid #00c853; text-align: right; }
+        .msg-label { font-size: 10px; color: #888; margin-bottom: 3px; }
+        .msg-text { font-size: 14px; }
+        .input-section { background: #2d2d44; border-radius: 15px; padding: 10px; }
+        .input-row { display: flex; gap: 10px; align-items: center; }
+        .input-row input { flex: 1; padding: 15px; border-radius: 25px; border: 2px solid #667eea; background: rgba(255,255,255,0.1); color: white; font-size: 16px; min-height: 50px; }
+        .input-row button { padding: 15px 25px; border-radius: 25px; background: #667eea; color: white; border: none; font-size: 16px; font-weight: bold; white-space: nowrap; }
+        .voice-row { display: flex; gap: 10px; margin-top: 10px; }
+        .voice-btn { flex: 1; padding: 15px; border-radius: 50px; border: 2px solid #ff4444; background: transparent; color: #ff4444; font-size: 16px; font-weight: bold; }
+        .voice-btn.active { background: #ff4444; color: white; animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        .end-btn { padding: 15px; border-radius: 50px; border: 2px solid rgba(255,255,255,0.3); background: transparent; color: white; font-size: 14px; }
+        .appt-section { display: none; background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; margin: 15px 0; }
+        .appt-section h3 { color: #ffd700; margin-bottom: 15px; font-size: 18px; }
+        .time-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .time-btn { background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); color: white; padding: 15px 20px; border-radius: 10px; font-size: 16px; cursor: pointer; min-width: 80px; }
+        .time-btn:active, .time-btn.selected { background: #00c853; border-color: #00c853; }
+        .confirm-btn { background: linear-gradient(135deg, #ffd700, #ffaa00); color: #1a1a2e; border: none; padding: 18px; font-size: 18px; border-radius: 15px; width: 100%; font-weight: bold; margin-top: 15px; cursor: pointer; }
+        .confirmed-section { display: none; text-align: center; padding: 40px 20px; }
+        .confirmed-icon { font-size: 60px; }
+        .confirmed-section h2 { color: #00c853; font-size: 22px; margin: 15px 0; }
+        .confirmed-section p { color: #ffd700; font-size: 20px; }
+        .confirmed-section .sub { color: #888; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -128,295 +59,216 @@
         <div class="header">
             <div class="logo">🚗</div>
             <h1>GT Auto Sales</h1>
-            <p style="color: #888;">Scratch & Win Event</p>
+            <p>Scratch & Win Event</p>
         </div>
-
-        <div class="winner-card" id="winnerCard">
-            <div class="winner-badge">🎉 Winner!</div>
-            <p style="color: #888;">Congratulations</p>
-            <div class="winner-name" id="winnerName">Loading...</div>
-            <div class="prize-text">Come in to redeem your prize!</div>
-            <div class="offers">
-                <div class="offer-item">
-                    <span class="offer-icon">🔥</span>
-                    <span class="offer-text"><strong>0% APR Financing</strong><br><small>On select models for qualified buyers</small></span>
+        <div class="tap-screen" id="tapScreen">
+            <div class="tap-icon">👆</div>
+            <div class="tap-text">Tap to Start</div>
+            <p style="color: #888; margin-bottom: 20px;">Tap to talk to Sarah</p>
+            <button class="tap-btn" onclick="startChat()">🎤 Talk to Sarah</button>
+        </div>
+        <div class="winner-section" id="winnerSection">
+            <div class="winner-badge">🎉 Congratulations! You Won!</div>
+            <div class="customer-name" id="customerName">...</div>
+        </div>
+        <div class="chat-section" id="chatSection">
+            <div class="chat-header">
+                <div class="icon">🤖</div>
+                <div class="name">Sarah - AI Assistant</div>
+            </div>
+            <div class="chat-status" id="chatStatus">Sarah is greeting...</div>
+            <div class="messages" id="messages"></div>
+            <div class="input-section">
+                <div class="input-row">
+                    <input type="text" id="textInput" placeholder="Type your message..." onkeypress="if(event.key==='Enter')sendMessage()">
+                    <button onclick="sendMessage()">Send</button>
                 </div>
-                <div class="offer-item">
-                    <span class="offer-icon">💰</span>
-                    <span class="offer-text"><strong>Trade-In Bonus</strong><br><small>Up to $2,000 extra for your trade-in</small></span>
-                </div>
-                <div class="offer-item">
-                    <span class="offer-icon">🎁</span>
-                    <span class="offer-text"><strong>Special Prize</strong><br><small>See what you've won in person!</small></span>
+                <div class="voice-row">
+                    <button class="voice-btn" id="voiceBtn" onclick="toggleVoice()">🎤 Voice</button>
+                    <button class="end-btn" onclick="endChat()">❌ End</button>
                 </div>
             </div>
-            <button class="talk-to-sarah" id="talkToSarahBtn" onclick="startConversation()">
-                🎤 Talk to Sarah - Redeem Your Prize
-            </button>
         </div>
-
-        <div class="voice-container" id="voiceContainer">
-            <div class="sarah-avatar">🤖</div>
-            <h2 style="color: #667eea;">Sarah - AI Assistant</h2>
-            <p class="status" id="status">Type or tap mic to talk</p>
-            <div class="waveform" id="waveform" style="display: none;">
-                <span></span><span></span><span></span><span></span><span></span>
+        <div class="appt-section" id="apptSection">
+            <h3>📅 Select Your Time - Saturday</h3>
+            <div class="time-row">
+                <button class="time-btn" onclick="selectTime(this, '10 AM')">10 AM</button>
+                <button class="time-btn" onclick="selectTime(this, '2 PM')">2 PM</button>
+                <button class="time-btn" onclick="selectTime(this, '4 PM')">4 PM</button>
             </div>
-            <div class="conversation" id="conversation"></div>
-            <div class="text-input-container">
-                <input type="text" id="textInput" placeholder="Type your message here..."
-                    style="width: 70%; padding: 15px; border-radius: 25px; border: 2px solid #667eea; background: rgba(255,255,255,0.1); color: white; font-size: 16px;"
-                    onkeypress="if(event.key==='Enter')sendTextMessage()">
-                <button onclick="sendTextMessage()" style="padding: 15px 20px; border-radius: 25px; background: #667eea; color: white; border: none; cursor: pointer; font-size: 16px;">Send</button>
-            </div>
-            <div class="controls">
-                <button class="control-btn" id="micBtn" onclick="toggleRecording()">🎤 Voice</button>
-                <button class="control-btn" onclick="endConversation()">❌ End</button>
-            </div>
+            <button class="confirm-btn" onclick="confirmAppt()">✓ Confirm Appointment</button>
         </div>
-
-        <div class="appointment-form" id="appointmentForm">
-            <h3 style="color: #ffd700; margin-bottom: 15px;">📅 Book Your Appointment</h3>
-            <p id="selectedTime">Select a time slot:</p>
-            <div class="time-slots" id="timeSlots">
-                <div class="time-slot" onclick="selectTime(this, '10 AM')">10:00 AM</div>
-                <div class="time-slot" onclick="selectTime(this, '2 PM')">2:00 PM</div>
-                <div class="time-slot" onclick="selectTime(this, '4 PM')">4:00 PM</div>
-            </div>
-            <p style="margin-top: 15px; color: #888;">Saturday, April 2026</p>
-            <button class="confirm-btn" onclick="confirmAppointment()">✓ Confirm Appointment</button>
-        </div>
-
-        <div class="confirmed" id="confirmedView">
+        <div class="confirmed-section" id="confirmedSection">
             <div class="confirmed-icon">✅</div>
-            <h2 style="color: #00c853;">Appointment Confirmed!</h2>
-            <p style="margin: 20px 0; color: #888;">You'll receive a text message with details.</p>
-            <p style="color: #ffd700; font-size: 20px;" id="confirmedTime"></p>
-        </div>
-
-        <div class="footer">
-            <p>GT Auto Sales • 1234 Car Way, Auto City</p>
-            <p>Call us: (888) 308-9827</p>
+            <h2>Appointment Confirmed!</h2>
+            <p id="confirmedTime"></p>
+            <p class="sub">We'll see you Saturday!</p>
         </div>
     </div>
-
     <script>
-        // Get name from URL
         const urlParams = new URLSearchParams(window.location.search);
         let customerName = urlParams.get('name') || 'there';
         customerName = customerName.replace(/-/g, ' ');
         const firstName = customerName.split(' ')[0];
-        document.getElementById('winnerName').textContent = customerName;
+        document.getElementById('customerName').textContent = customerName;
 
-        // Speech recognition setup
-        let recognition = null;
         let isRecording = false;
-        let isSarahSpeaking = false;
-        let conversationHistory = [];
+        let isSpeaking = false;
+        let selectedTime = '10 AM';
+        let recognition = null;
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-        if (!SpeechRecognition) {
-            document.getElementById('talkToSarahBtn').textContent = '🎤 Browser Voice Not Supported';
-        } else {
+        if (SpeechRecognition) {
             recognition = new SpeechRecognition();
             recognition.continuous = true;
-            recognition.interimResults = true;
+            recognition.interimResults = false;
             recognition.lang = 'en-US';
-
             recognition.onresult = (event) => {
                 const result = event.results[event.results.length - 1];
-                const transcript = result[0].transcript.trim();
-                if (result.isFinal && transcript && !isSarahSpeaking) {
-                    processCustomerMessage(transcript);
+                const text = result[0].transcript.trim().toLowerCase();
+                if (result.isFinal && text && !isSpeaking) {
+                    processMessage(text);
                 }
             };
-
-            recognition.onerror = (event) => {
-                console.error('Speech recognition error:', event.error);
-                document.getElementById('status').textContent = 'Error: ' + event.error;
-                if (isRecording && !isSarahSpeaking) {
-                    setTimeout(() => { try { recognition.start(); } catch(e) {} }, 1000);
-                }
-            };
-
+            recognition.onerror = (e) => {};
             recognition.onend = () => {
-                if (isRecording && !isSarahSpeaking) {
-                    setTimeout(() => {
-                        try { recognition.start(); }
-                        catch(e) {}
-                    }, 100);
+                if (isRecording && !isSpeaking) {
+                    try { recognition.start(); } catch(e) {}
                 }
             };
         }
 
-        // Text-to-speech - Using ResponsiveVoice
-        function speak(text, callback) {
-            isSarahSpeaking = true;
-            document.getElementById('status').textContent = 'Sarah is speaking...';
-
-            if (typeof ResponsiveVoice !== 'undefined') {
-                ResponsiveVoice.speak(text, "US English Female", {
-                    pitch: 1, rate: 1, volume: 1,
-                    onend: () => {
-                        isSarahSpeaking = false;
-                        document.getElementById('status').textContent = isRecording ? 'Listening...' : 'Tap mic to talk';
-                        if (callback) callback();
-                    }
-                });
-            } else {
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.rate = 1; utterance.pitch = 1; utterance.volume = 1;
-                const voices = speechSynthesis.getVoices();
-                const femaleVoice = voices.find(v => v.name.includes('Female') || v.name.includes('Samantha') || v.lang.startsWith('en-US')) || voices[0];
-                utterance.voice = femaleVoice;
-                utterance.onend = () => {
-                    isSarahSpeaking = false;
-                    document.getElementById('status').textContent = isRecording ? 'Listening...' : 'Tap mic to talk';
-                    if (callback) callback();
-                };
-                speechSynthesis.speak(utterance);
-            }
+        function speak(text) {
+            isSpeaking = true;
+            document.getElementById('chatStatus').textContent = 'Sarah is speaking...';
+            speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+            const voices = speechSynthesis.getVoices();
+            const female = voices.find(v => v.name.includes('Female') || v.name.includes('Samantha') || v.lang === 'en-US');
+            if (female) utterance.voice = female;
+            utterance.onend = () => {
+                isSpeaking = false;
+                document.getElementById('chatStatus').textContent = isRecording ? 'Listening...' : 'Tap voice to talk';
+            };
+            utterance.onerror = () => {
+                isSpeaking = false;
+                document.getElementById('chatStatus').textContent = 'Tap voice to talk';
+            };
+            speechSynthesis.speak(utterance);
         }
 
         if (speechSynthesis.onvoiceschanged !== undefined) {
             speechSynthesis.onvoiceschanged = () => {};
         }
 
-        // Start conversation with Sarah
-        function startConversation() {
-            document.getElementById('winnerCard').style.display = 'none';
-            document.getElementById('voiceContainer').classList.add('active');
-
-            // Sarah greets by name - NO TEST DRIVE - REDEEM PRIZE!
+        function startChat() {
+            document.getElementById('tapScreen').style.display = 'none';
+            document.getElementById('winnerSection').style.display = 'block';
+            document.getElementById('chatSection').style.display = 'block';
             const greeting = `Hi ${firstName}! Congratulations! You've won a scratch and win prize from GT Auto Sales! I'm Sarah, and I'm here to help you redeem your prize in person. Would you like to schedule a time to come in and claim your reward this Saturday?`;
-
             addMessage('sarah', greeting);
             speak(greeting);
-
-            // Auto-start listening after Sarah finishes greeting
-            setTimeout(() => {
-                if (!isRecording) toggleRecording();
-            }, 4000);
+            setTimeout(() => { toggleVoice(); }, 6000);
         }
 
-        function toggleRecording() {
+        function addMessage(who, text) {
+            const msgs = document.getElementById('messages');
+            const div = document.createElement('div');
+            div.className = `msg ${who}`;
+            div.innerHTML = `<div class="msg-label">${who === 'sarah' ? '🤖 Sarah' : '👤 You'}</div><div class="msg-text">${text}</div>`;
+            msgs.appendChild(div);
+            msgs.scrollTop = msgs.scrollHeight;
+        }
+
+        function processMessage(msg) {
+            addMessage('customer', msg);
+            document.getElementById('chatStatus').textContent = 'Sarah is thinking...';
+            const m = msg.toLowerCase();
+            let response;
+            if (m.includes('yes') || m.includes('yeah') || m.includes('yep') || m.includes('sure') || m.includes('ok')) {
+                response = `Great! I can help you schedule a time to redeem your prize. Would you prefer 10 AM, 2 PM, or 4 PM this Saturday? Tap a time below!`;
+                document.getElementById('apptSection').style.display = 'block';
+                document.getElementById('apptSection').scrollIntoView({ behavior: 'smooth' });
+            }
+            else if (m.includes('no') || m.includes('nope')) {
+                response = `No problem! Call us at (888) 308-9827 if you change your mind. Have a great day!`;
+            }
+            else if (m.includes('10') || m.includes('ten') || m.includes('morning')) {
+                selectedTime = '10 AM';
+                document.querySelectorAll('.time-btn')[0].classList.add('selected');
+                response = `Perfect! 10 AM on Saturday. Tap Confirm below!`;
+                document.getElementById('apptSection').style.display = 'block';
+            }
+            else if (m.includes('2') || m.includes('two') || m.includes('afternoon')) {
+                selectedTime = '2 PM';
+                document.querySelectorAll('.time-btn')[1].classList.add('selected');
+                response = `Great! 2 PM on Saturday. Tap Confirm below!`;
+                document.getElementById('apptSection').style.display = 'block';
+            }
+            else if (m.includes('4') || m.includes('four') || m.includes('late')) {
+                selectedTime = '4 PM';
+                document.querySelectorAll('.time-btn')[2].classList.add('selected');
+                response = `Excellent! 4 PM on Saturday. Tap Confirm below!`;
+                document.getElementById('apptSection').style.display = 'block';
+            }
+            else {
+                response = `I didn't catch that. Would you like to schedule a time to redeem your prize this Saturday? Just say "yes"!`;
+            }
+            addMessage('sarah', response);
+            speak(response);
+            document.getElementById('chatStatus').textContent = 'Conversation active';
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('textInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+            processMessage(msg);
+            input.value = '';
+        }
+
+        function toggleVoice() {
             if (!recognition) {
-                document.getElementById('status').textContent = 'Voice not supported';
+                document.getElementById('chatStatus').textContent = 'Voice not supported';
                 return;
             }
             if (isRecording) {
                 isRecording = false;
-                try { recognition.stop(); } catch(e) {}
-                document.getElementById('micBtn').textContent = '🎤 Voice';
-                document.getElementById('micBtn').classList.remove('recording');
-                document.getElementById('waveform').style.display = 'none';
-                document.getElementById('status').textContent = 'Stopped';
+                recognition.stop();
+                document.getElementById('voiceBtn').textContent = '🎤 Voice';
+                document.getElementById('voiceBtn').classList.remove('active');
             } else {
                 isRecording = true;
-                try {
-                    recognition.start();
-                    document.getElementById('micBtn').textContent = '⏹️ Stop';
-                    document.getElementById('micBtn').classList.add('recording');
-                    document.getElementById('waveform').style.display = 'flex';
-                    document.getElementById('status').textContent = 'Listening...';
-                } catch(e) {
-                    isRecording = false;
-                    document.getElementById('status').textContent = 'Mic error - try again';
-                }
+                recognition.start();
+                document.getElementById('voiceBtn').textContent = '⏹️ Stop';
+                document.getElementById('voiceBtn').classList.add('active');
+                document.getElementById('chatStatus').textContent = 'Listening...';
             }
         }
 
-        function sendTextMessage() {
-            const input = document.getElementById('textInput');
-            const message = input.value.trim();
-            if (!message) return;
-            processCustomerMessage(message);
-            input.value = '';
+        function selectTime(btn, time) {
+            document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedTime = time;
         }
 
-        async function processCustomerMessage(message) {
-            addMessage('customer', message);
-            document.getElementById('status').textContent = 'Sarah is thinking...';
-            conversationHistory.push({ role: 'user', content: message });
-
-            try {
-                const response = await fetch('/api/sarah/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        message: message,
-                        customerName: firstName,
-                        history: conversationHistory
-                    })
-                });
-
-                const data = await response.json();
-                const sarahResponse = data.response;
-
-                addMessage('sarah', sarahResponse);
-                speak(sarahResponse);
-                conversationHistory.push({ role: 'assistant', content: sarahResponse });
-
-                if (data.showAppointmentForm) {
-                    document.getElementById('appointmentForm').classList.add('active');
-                }
-                document.getElementById('status').textContent = 'Conversation active';
-            } catch (error) {
-                console.error('Error calling Sarah AI:', error);
-                // FIXED: NO TEST DRIVE - REDEEM PRIZE!
-                const fallback = "I'm sorry, I didn't catch that. Would you like to schedule a time to redeem your prize this Saturday?";
-                addMessage('sarah', fallback);
-                speak(fallback);
-            }
+        function confirmAppt() {
+            document.getElementById('chatSection').style.display = 'none';
+            document.getElementById('apptSection').style.display = 'none';
+            document.getElementById('confirmedSection').style.display = 'block';
+            document.getElementById('confirmedTime').textContent = `📅 ${selectedTime} - Saturday`;
+            speak(`Perfect! Your appointment is confirmed for ${selectedTime} this Saturday. We look forward to seeing you, ${firstName}!`);
         }
 
-        function addMessage(sender, text) {
-            const conv = document.getElementById('conversation');
-            const msg = document.createElement('div');
-            msg.className = `message ${sender}`;
-            msg.innerHTML = `<div class="message-label">${sender === 'sarah' ? '🤖 Sarah' : '👤 You'}</div>${text}`;
-            conv.appendChild(msg);
-            conv.scrollTop = conv.scrollHeight;
-        }
-
-        function selectTime(element, time) {
-            document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
-            element.classList.add('selected');
-            document.getElementById('selectedTime').textContent = `Selected: ${time}`;
-            document.getElementById('selectedTime').dataset.time = time;
-        }
-
-        async function confirmAppointment() {
-            const selectedTime = document.getElementById('selectedTime').dataset.time || '10 AM';
-            const response = await fetch('/api/appointments/book', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    customerName: customerName,
-                    time: selectedTime,
-                    date: 'Saturday'
-                })
-            });
-            const data = await response.json();
-            if (data.success) {
-                document.getElementById('voiceContainer').style.display = 'none';
-                document.getElementById('appointmentForm').style.display = 'none';
-                document.getElementById('confirmedView').classList.add('active');
-                document.getElementById('confirmedTime').textContent = `📅 ${selectedTime} - Saturday`;
-                const confirmMsg = `Perfect! Your appointment is confirmed for ${selectedTime} this Saturday. We look forward to seeing you, ${firstName}!`;
-                speak(confirmMsg);
-            }
-        }
-
-        function endConversation() {
+        function endChat() {
             isRecording = false;
             if (recognition) recognition.stop();
             speechSynthesis.cancel();
-            const goodbye = "Thank you for visiting GT Auto Sales! Feel free to call us if you have any questions. Have a great day!";
-            addMessage('sarah', goodbye);
-            speak(goodbye);
-            setTimeout(() => { window.location.reload(); }, 3000);
+            addMessage('sarah', 'Thank you for visiting GT Auto Sales! Have a great day!');
+            speak('Thank you for visiting GT Auto Sales! Have a great day!');
         }
     </script>
 <style>
