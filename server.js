@@ -16,6 +16,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/qrcodes', express.static('qrcodes'));
+app.use(express.static('public'));
 
 ['uploads', 'qrcodes', 'data'].forEach(dir => {
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
@@ -37,10 +38,12 @@ const twilioClient = twilio(
 const VoiceResponse = twilio.twiml.VoiceResponse;
 
 const BASE_URL = process.env.BASE_URL || 'https://bison-media-backend.onrender.com';
+const TWILIO_PHONE = process.env.TWILIO_PHONE_NUMBER || '+18883089827';
 
-// Landing page with phone number input + Call button
+// LANDING PAGE - Click to call Sarah
 app.get('/call/:name', (req, res) => {
     const name = req.params.name.replace(/-/g, ' ');
+    
     res.send(`
 <!DOCTYPE html>
 <html>
@@ -49,14 +52,13 @@ app.get('/call/:name', (req, res) => {
     <style>
         body { font-family: Arial, sans-serif; text-align: center; padding: 30px; background: linear-gradient(135deg, #1a1a2e, #16213e); min-height: 100vh; color: white; margin: 0; }
         .container { max-width: 500px; margin: 0 auto; }
-        h1 { color: #00d4ff; margin-bottom: 10px; font-size: 2rem; }
-        .prize { font-size: 4rem; margin: 20px 0; }
+        h1 { color: #00d4ff; font-size: 2rem; }
+        .prize { font-size: 5rem; margin: 20px 0; }
         .card { background: rgba(255,255,255,0.1); padding: 30px; border-radius: 20px; margin: 20px 0; }
-        .phone-input { width: 100%; padding: 15px; font-size: 1.2rem; border-radius: 10px; border: 2px solid #00d4ff; text-align: center; box-sizing: border-box; }
-        .btn { background: #00d4ff; color: #1a1a2e; padding: 15px 40px; font-size: 1.2rem; border: none; border-radius: 50px; cursor: pointer; width: 100%; margin-top: 15px; font-weight: bold; }
-        .btn:hover { background: #00ff88; }
-        .note { color: #888; font-size: 0.9rem; margin-top: 15px; }
-        .success { background: #00ff88; color: #1a1a2e; padding: 20px; border-radius: 15px; margin-top: 20px; font-weight: bold; }
+        .call-btn { display: block; background: #00ff88; color: #1a1a2e; padding: 25px 40px; font-size: 1.5rem; border-radius: 50px; text-decoration: none; font-weight: bold; margin: 20px 0; box-shadow: 0 4px 15px rgba(0,255,136,0.3); }
+        .call-btn:hover { transform: scale(1.05); }
+        .note { color: #888; margin-top: 15px; }
+        .small { font-size: 0.9rem; color: #666; margin-top: 30px; }
     </style>
 </head>
 <body>
@@ -66,84 +68,31 @@ app.get('/call/:name', (req, res) => {
         <div class="prize">🚗🏆🎁</div>
         
         <div class="card">
-            <p>Enter your phone number below and Sarah will call you to schedule your appointment!</p>
-            <input type="tel" id="phone" class="phone-input" placeholder="Enter your phone (e.g., +1 555-123-4567)">
-            <button class="btn" onclick="callSarah()">📞 Sarah, Call Me Now!</button>
-            <p class="note">Sarah will call you and greet you by name!</p>
-        </div>
-        
-        <div id="success" style="display:none;" class="success">
-            <h2>✓ Sarah is calling you now!</h2>
-            <p>Answer your phone to speak with Sarah.</p>
-        </div>
-        
-        <div id="error" style="display:none; color: #ff4444; margin-top: 15px;"></div>
-    </div>
-    
-    <script>
-        async function callSarah() {
-            const phone = document.getElementById('phone').value;
-            if (!phone || phone.length < 10) {
-                document.getElementById('error').style.display = 'block';
-                document.getElementById('error').textContent = 'Please enter a valid phone number';
-                return;
-            }
+            <p>Tap the button below to connect with Sarah!</p>
             
-            try {
-                const response = await fetch('/api/call/${req.params.name}', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone: phone })
-                });
-                const data = await response.json();
-                
-                if (data.success) {
-                    document.querySelector('.card').style.display = 'none';
-                    document.getElementById('success').style.display = 'block';
-                } else {
-                    document.getElementById('error').style.display = 'block';
-                    document.getElementById('error').textContent = 'Error: ' + (data.error || 'Please try again');
-                }
-            } catch (e) {
-                document.getElementById('error').style.display = 'block';
-                document.getElementById('error').textContent = 'Connection error. Please try again.';
-            }
-        }
-    </script>
+            <a href="tel:${TWILIO_PHONE}?name=${req.params.name}" class="call-btn">
+                📞 Tap to Call Sarah Now
+            </a>
+            
+            <p class="note">Sarah will greet you by name and help schedule your test drive!</p>
+        </div>
+        
+        <p class="small">Sarah is waiting to help you claim your prize!</p>
+    </div>
 </body>
 </html>
     `);
 });
 
-// Initiate call - Sarah CALLS the person
-app.post('/api/call/:name', async (req, res) => {
-    const name = req.params.name.replace(/-/g, ' ');
-    const phone = req.body.phone;
-
-    if (!phone) {
-        return res.json({ success: false, error: 'Phone number required' });
-    }
-
-    try {
-        // Sarah calls the person
-        await twilioClient.calls.create({
-            url: `${BASE_URL}/voice/greet?name=${encodeURIComponent(name)}`,
-            to: phone,
-            from: process.env.TWILIO_PHONE_NUMBER
-        });
-        res.json({ success: true });
-    } catch (e) {
-        res.json({ success: false, error: e.message });
-    }
-});
-
-// Sarah greets by NAME
-app.post('/voice/greet', (req, res) => {
-    const name = req.query.name || 'there';
+// When customer CALLS Sarah
+app.post('/voice/incoming', (req, res) => {
     const twiml = new VoiceResponse();
-
+    
+    // Get customer name from phone number (caller ID)
+    const callerName = req.query.name || req.body.name || 'there';
+    
     twiml.say({ voice: 'alice' },
-        `Hi ${name}! This is Sarah from GT Auto Sales. Congratulations on your scratch and win prize! I'm calling to help you schedule your test drive. Is this a good time to talk? Press 1 for yes, or press 2 for a callback.`);
+        `Hi ${callerName}! This is Sarah from GT Auto Sales. Congratulations on your scratch and win prize! I'm calling to help you schedule your test drive. Is this a good time to talk? Press 1 for yes, or press 2 for a callback.`);
 
     twiml.gather({
         input: 'dtmf',
@@ -167,7 +116,7 @@ app.post('/voice/respond', (req, res) => {
             input: 'dtmf',
             numDigits: 1,
             timeout: 30,
-            action: `${BASE_URL}/voice/book`
+            action: `${BASE_URL}/voice/confirm`
         });
     } else {
         twiml.say({ voice: 'alice' }, `No problem! Have a great day!`);
@@ -177,7 +126,7 @@ app.post('/voice/respond', (req, res) => {
     res.type('text/xml').send(twiml.toString());
 });
 
-app.post('/voice/book', async (req, res) => {
+app.post('/voice/confirm', async (req, res) => {
     const twiml = new VoiceResponse();
     const digit = req.body.Digits;
     const from = req.body.From;
@@ -195,7 +144,7 @@ app.post('/voice/book', async (req, res) => {
         try {
             await twilioClient.messages.create({
                 body: `Your GT Auto appointment is confirmed for ${timeSlot} Saturday! https://4u95lgtba68e.space.minimax.io`,
-                from: process.env.TWILIO_PHONE_NUMBER,
+                from: TWILIO_PHONE,
                 to: from
             });
         } catch (e) {}
