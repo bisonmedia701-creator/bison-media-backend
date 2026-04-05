@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>GT Auto Sales - Scratch & Win</title>
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=7W0xC7h8"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html, body { height: 100%; overflow: auto; -webkit-overflow-scrolling: touch; }
@@ -106,17 +107,20 @@
         </div>
     </div>
     <script>
+        // Get name
         const urlParams = new URLSearchParams(window.location.search);
         let customerName = urlParams.get('name') || 'there';
         customerName = customerName.replace(/-/g, ' ');
         const firstName = customerName.split(' ')[0];
         document.getElementById('customerName').textContent = customerName;
 
+        // State
         let isRecording = false;
         let isSpeaking = false;
         let selectedTime = '10 AM';
         let recognition = null;
 
+        // Speech Recognition
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (SpeechRecognition) {
             recognition = new SpeechRecognition();
@@ -138,17 +142,62 @@
             };
         }
 
+        // FEMALE VOICE - Using ResponsiveVoice with female voice
         function speak(text) {
             isSpeaking = true;
             document.getElementById('chatStatus').textContent = 'Sarah is speaking...';
             speechSynthesis.cancel();
+
+            // Try ResponsiveVoice first (better female voice)
+            if (typeof ResponsiveVoice !== 'undefined') {
+                ResponsiveVoice.speak(text, "US English Female", {
+                    pitch: 1,
+                    rate: 1,
+                    volume: 1,
+                    onend: () => {
+                        isSpeaking = false;
+                        document.getElementById('chatStatus').textContent = isRecording ? 'Listening...' : 'Tap voice to talk';
+                    },
+                    onerror: () => {
+                        // Fallback to native if ResponsiveVoice fails
+                        speakNative(text);
+                    }
+                });
+            } else {
+                speakNative(text);
+            }
+        }
+
+        // Native fallback with better female voice selection
+        function speakNative(text) {
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.rate = 1;
-            utterance.pitch = 1;
+            utterance.pitch = 1.2; // Higher pitch for more feminine sound
             utterance.volume = 1;
+
+            // Get all available voices
             const voices = speechSynthesis.getVoices();
-            const female = voices.find(v => v.name.includes('Female') || v.name.includes('Samantha') || v.lang === 'en-US');
-            if (female) utterance.voice = female;
+
+            // Find best female voice
+            const femaleVoice = voices.find(v =>
+                // Priority 1: Explicit female names
+                v.name.includes('Female') ||
+                v.name.includes('Samantha') ||
+                v.name.includes('Karen') ||
+                v.name.includes('Victoria') ||
+                v.name.includes('Kate') ||
+                v.name.includes('Fiona') ||
+                v.name.includes('Zira') ||
+                v.name.includes('Google US English Female') ||
+                // Priority 2: English US voices
+                v.lang === 'en-US' ||
+                v.lang.startsWith('en-US')
+            );
+
+            if (femaleVoice) {
+                utterance.voice = femaleVoice;
+            }
+
             utterance.onend = () => {
                 isSpeaking = false;
                 document.getElementById('chatStatus').textContent = isRecording ? 'Listening...' : 'Tap voice to talk';
@@ -157,23 +206,36 @@
                 isSpeaking = false;
                 document.getElementById('chatStatus').textContent = 'Tap voice to talk';
             };
+
             speechSynthesis.speak(utterance);
         }
 
+        // Load voices
         if (speechSynthesis.onvoiceschanged !== undefined) {
-            speechSynthesis.onvoiceschanged = () => {};
+            speechSynthesis.onvoiceschanged = () => {
+                // Voices loaded
+            };
         }
 
+        // START
         function startChat() {
             document.getElementById('tapScreen').style.display = 'none';
             document.getElementById('winnerSection').style.display = 'block';
             document.getElementById('chatSection').style.display = 'block';
+
+            // Sarah's greeting
             const greeting = `Hi ${firstName}! Congratulations! You've won a scratch and win prize from GT Auto Sales! I'm Sarah, and I'm here to help you redeem your prize in person. Would you like to schedule a time to come in and claim your reward this Saturday?`;
+
             addMessage('sarah', greeting);
             speak(greeting);
-            setTimeout(() => { toggleVoice(); }, 6000);
+
+            // Auto-start voice after greeting
+            setTimeout(() => {
+                toggleVoice();
+            }, 6000);
         }
 
+        // ADD MESSAGE
         function addMessage(who, text) {
             const msgs = document.getElementById('messages');
             const div = document.createElement('div');
@@ -183,11 +245,14 @@
             msgs.scrollTop = msgs.scrollHeight;
         }
 
+        // PROCESS MESSAGE
         function processMessage(msg) {
             addMessage('customer', msg);
             document.getElementById('chatStatus').textContent = 'Sarah is thinking...';
+
             const m = msg.toLowerCase();
             let response;
+
             if (m.includes('yes') || m.includes('yeah') || m.includes('yep') || m.includes('sure') || m.includes('ok')) {
                 response = `Great! I can help you schedule a time to redeem your prize. Would you prefer 10 AM, 2 PM, or 4 PM this Saturday? Tap a time below!`;
                 document.getElementById('apptSection').style.display = 'block';
@@ -217,11 +282,13 @@
             else {
                 response = `I didn't catch that. Would you like to schedule a time to redeem your prize this Saturday? Just say "yes"!`;
             }
+
             addMessage('sarah', response);
             speak(response);
             document.getElementById('chatStatus').textContent = 'Conversation active';
         }
 
+        // SEND TEXT
         function sendMessage() {
             const input = document.getElementById('textInput');
             const msg = input.value.trim();
@@ -230,11 +297,13 @@
             input.value = '';
         }
 
+        // TOGGLE VOICE
         function toggleVoice() {
             if (!recognition) {
                 document.getElementById('chatStatus').textContent = 'Voice not supported';
                 return;
             }
+
             if (isRecording) {
                 isRecording = false;
                 recognition.stop();
@@ -249,12 +318,14 @@
             }
         }
 
+        // SELECT TIME
         function selectTime(btn, time) {
             document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
             btn.classList.add('selected');
             selectedTime = time;
         }
 
+        // CONFIRM
         function confirmAppt() {
             document.getElementById('chatSection').style.display = 'none';
             document.getElementById('apptSection').style.display = 'none';
@@ -263,6 +334,7 @@
             speak(`Perfect! Your appointment is confirmed for ${selectedTime} this Saturday. We look forward to seeing you, ${firstName}!`);
         }
 
+        // END
         function endChat() {
             isRecording = false;
             if (recognition) recognition.stop();
