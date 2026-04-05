@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GT Auto Sales - Scratch & Win</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh; color: white; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .logo { font-size: 48px; margin-bottom: 10px; }
+        h1 { font-size: 28px; margin-bottom: 10px; color: #ffd700; }
+        .winner-card { background: linear-gradient(145deg, #2d2d44, #1f1f33); border-radius: 20px; padding: 40px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 2px solid #ffd700; margin-bottom: 30px; }
+        .winner-badge { background: linear-gradient(135deg, #ffd700, #ffaa00); color: #1a1a2e; padding: 10px 30px; border-radius: 50px; font-weight: bold; font-size: 14px; display: inline-block; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
+        .winner-name { font-size: 36px; color: #fff; margin: 20px 0; text-shadow: 0 2px 10px rgba(255,215,0,0.3); }
+        .prize-text { color: #88ff88; font-size: 20px; margin: 20px 0; }
+        .offers { background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; margin: 20px 0; }
+        .offer-item { display: flex; align-items: center; margin: 15px 0; text-align: left; }
+        .offer-icon { font-size: 24px; margin-right: 15px; width: 40px; }
+        .offer-text { font-size: 16px; }
+        .talk-to-sarah { background: linear-gradient(135deg, #00c853, #00a843); color: white; border: none; padding: 20px 40px; font-size: 20px; border-radius: 50px; cursor: pointer; width: 100%; margin: 20px 0; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(0,200,83,0.3); }
+        .talk-to-sarah:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0,200,83,0.4); }
+        .voice-container { display: none; background: linear-gradient(145deg, #2d2d44, #1f1f33); border-radius: 20px; padding: 30px; margin: 20px 0; text-align: center; }
+        .voice-container.active { display: block; }
+        .sarah-avatar { width: 120px; height: 120px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 60px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .conversation { background: rgba(0,0,0,0.3); border-radius: 15px; padding: 20px; max-height: 300px; overflow-y: auto; margin: 20px 0; text-align: left; }
+        .message { margin: 15px 0; padding: 15px; border-radius: 15px; line-height: 1.5; }
+        .message.sarah { background: rgba(102, 126, 234, 0.3); border-left: 4px solid #667eea; }
+        .message.customer { background: rgba(0, 200, 83, 0.2); border-right: 4px solid #00c853; }
+        .message-label { font-size: 12px; color: #888; margin-bottom: 5px; }
+        .waveform { display: flex; justify-content: center; align-items: center; gap: 5px; height: 40px; margin: 20px 0; }
+        .waveform span { width: 4px; background: #667eea; border-radius: 2px; animation: wave 1s infinite ease-in-out; }
+        .waveform span:nth-child(1) { height: 20px; animation-delay: 0s; }
+        .waveform span:nth-child(2) { height: 30px; animation-delay: 0.1s; }
+        .waveform span:nth-child(3) { height: 40px; animation-delay: 0.2s; }
+        .waveform span:nth-child(4) { height: 30px; animation-delay: 0.3s; }
+        .waveform span:nth-child(5) { height: 20px; animation-delay: 0.4s; }
+        @keyframes wave { 0%, 100% { transform: scaleY(0.5); } 50% { transform: scaleY(1); } }
+        .controls { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
+        .control-btn { background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); color: white; padding: 15px 30px; border-radius: 50px; cursor: pointer; font-size: 16px; transition: all 0.3s ease; }
+        .control-btn:hover { background: rgba(255,255,255,0.2); }
+        .control-btn.recording { background: #ff4444; border-color: #ff4444; animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        .status { color: #888; margin: 10px 0; font-size: 14px; }
+        .appointment-form { display: none; background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; margin: 20px 0; }
+        .appointment-form.active { display: block; }
+        .time-slots { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 20px 0; }
+        .time-slot { background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); color: white; padding: 15px 25px; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; }
+        .time-slot:hover, .time-slot.selected { background: #00c853; border-color: #00c853; }
+        .confirm-btn { background: linear-gradient(135deg, #ffd700, #ffaa00); color: #1a1a2e; border: none; padding: 15px 40px; font-size: 18px; border-radius: 50px; cursor: pointer; margin-top: 20px; font-weight: bold; }
+        .confirmed { display: none; text-align: center; padding: 40px; }
+        .confirmed.active { display: block; }
+        .confirmed-icon { font-size: 80px; margin-bottom: 20px; }
+        .footer { text-align: center; margin-top: 30px; color: #666; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🚗</div>
+            <h1>GT Auto Sales</h1>
+            <p style="color: #888;">Scratch & Win Event</p>
+        </div>
+
+        <div class="winner-card" id="winnerCard">
+            <div class="winner-badge">🎉 Winner!</div>
+            <p style="color: #888;">Congratulations</p>
+            <div class="winner-name" id="winnerName">Loading...</div>
+            <div class="prize-text">You've won a VIP Test Drive Experience!</div>
+            <div class="offers">
+                <div class="offer-item"><span class="offer-icon">🔥</span><span class="offer-text"><strong>0% APR Financing</strong><br><small>On select models</small></span></div>
+                <div class="offer-item"><span class="offer-icon">💰</span><span class="offer-text"><strong>Trade-In Bonus</strong><br><small>Up to $2,000 extra</small></span></div>
+                <div class="offer-item"><span class="offer-icon">🛡️</span><span class="offer-text"><strong>Extended Warranty</strong><br><small>Free 5-year warranty</small></span></div>
+            </div>
+            <button class="talk-to-sarah" id="talkToSarahBtn" onclick="startConversation()">🎤 Talk to Sarah - Book Your Test Drive</button>
+        </div>
+
+        <div class="voice-container" id="voiceContainer">
+            <div class="sarah-avatar">🤖</div>
+            <h2 style="color: #667eea;">Sarah - AI Assistant</h2>
+            <p class="status" id="status">Click the microphone to start talking</p>
+            <div class="waveform" id="waveform" style="display: none;"><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="conversation" id="conversation"></div>
+            <div class="controls">
+                <button class="control-btn" id="micBtn" onclick="toggleRecording()">🎤 Start Talking</button>
+                <button class="control-btn" onclick="endConversation()">❌ End</button>
+            </div>
+        </div>
+
+        <div class="appointment-form" id="appointmentForm">
+            <h3 style="color: #ffd700; margin-bottom: 15px;">📅 Book Your Appointment</h3>
+            <p id="selectedTime">Select a time slot:</p>
+            <div class="time-slots" id="timeSlots">
+                <div class="time-slot" onclick="selectTime(this, '10 AM')">10:00 AM</div>
+                <div class="time-slot" onclick="selectTime(this, '2 PM')">2:00 PM</div>
+                <div class="time-slot" onclick="selectTime(this, '4 PM')">4:00 PM</div>
+            </div>
+            <p style="margin-top: 15px; color: #888;">Saturday, April 2026</p>
+            <button class="confirm-btn" onclick="confirmAppointment()">✓ Confirm Appointment</button>
+        </div>
+
+        <div class="confirmed" id="confirmedView">
+            <div class="confirmed-icon">✅</div>
+            <h2 style="color: #00c853;">Appointment Confirmed!</h2>
+            <p style="margin: 20px 0; color: #888;">You'll receive a text message with details.</p>
+            <p style="color: #ffd700; font-size: 20px;" id="confirmedTime"></p>
+        </div>
+
+        <div class="footer"><p>GT Auto Sales • Call us: (888) 308-9827</p></div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        let customerName = urlParams.get('name') || 'there';
+        customerName = customerName.replace(/-/g, ' ');
+        const firstName = customerName.split(' ')[0];
+        document.getElementById('winnerName').textContent = customerName;
+
+        let recognition = null;
+        let isRecording = false;
+        let conversationHistory = [];
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        if (!SpeechRecognition) {
+            document.getElementById('talkToSarahBtn').textContent = '🎤 Voice Not Supported - Call: (888) 308-9827';
+        } else {
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+            recognition.onresult = (event) => {
+                const transcript = event.results[event.results.length - 1][0].transcript;
+                if (event.results[event.results.length - 1].isFinal) processCustomerMessage(transcript);
+            };
+            recognition.onerror = (event) => { document.getElementById('status').textContent = 'Error: ' + event.error; };
+            recognition.onend = () => { if (isRecording) recognition.start(); };
+        }
+
+        function speak(text) { speechSynthesis.speak(new SpeechSynthesisUtterance(text)); }
+
+        function startConversation() {
+            document.getElementById('winnerCard').style.display = 'none';
+            document.getElementById('voiceContainer').classList.add('active');
+            const greeting = `Hi ${firstName}! This is Sarah from GT Auto Sales. Congratulations on your scratch and win prize! Would you like to book an appointment this Saturday?`;
+            addMessage('sarah', greeting);
+            speak(greeting);
+            document.getElementById('status').textContent = 'Sarah is speaking...';
+        }
+
+        function toggleRecording() {
+            if (!recognition) return;
+            if (isRecording) {
+                isRecording = false;
+                recognition.stop();
+                document.getElementById('micBtn').textContent = '🎤 Start Talking';
+                document.getElementById('micBtn').classList.remove('recording');
+                document.getElementById('waveform').style.display = 'none';
+            } else {
+                isRecording = true;
+                recognition.start();
+                document.getElementById('micBtn').textContent = '⏹️ Stop';
+                document.getElementById('micBtn').classList.add('recording');
+                document.getElementById('waveform').style.display = 'flex';
+                document.getElementById('status').textContent = 'Listening...';
+            }
+        }
+
+        async function processCustomerMessage(message) {
+            addMessage('customer', message);
+            document.getElementById('status').textContent = 'Sarah is thinking...';
+            conversationHistory.push({ role: 'user', content: message });
+
+            try {
+                const response = await fetch('/api/sarah/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message, customerName: firstName, history: conversationHistory })
+                });
+                const data = await response.json();
+                addMessage('sarah', data.response);
+                speak(data.response);
+                conversationHistory.push({ role: 'assistant', content: data.response });
+                if (data.showAppointmentForm) document.getElementById('appointmentForm').classList.add('active');
+                document.getElementById('status').textContent = 'Conversation active';
+            } catch (error) {
+                addMessage('sarah', "I'm sorry, I didn't catch that.");
+                speak("I'm sorry, I didn't catch that.");
+            }
+        }
+
+        function addMessage(sender, text) {
+            const conv = document.getElementById('conversation');
+            const msg = document.createElement('div');
+            msg.className = `message ${sender}`;
+            msg.innerHTML = `<div class="message-label">${sender === 'sarah' ? '🤖 Sarah' : '👤 You'}</div>${text}`;
+            conv.appendChild(msg);
+            conv.scrollTop = conv.scrollHeight;
+        }
+
+        function selectTime(element, time) {
+            document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+            element.classList.add('selected');
+            document.getElementById('selectedTime').textContent = `Selected: ${time}`;
+            document.getElementById('selectedTime').dataset.time = time;
+        }
+
+        async function confirmAppointment() {
+            const selectedTime = document.getElementById('selectedTime').dataset.time || '10 AM';
+            try {
+                await fetch('/api/appointments/book', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ customerName, time: selectedTime, date: 'Saturday' })
+                });
+            } catch (e) {}
+            document.getElementById('voiceContainer').style.display = 'none';
+            document.getElementById('appointmentForm').style.display = 'none';
+            document.getElementById('confirmedView').classList.add('active');
+            document.getElementById('confirmedTime').textContent = `📅 ${selectedTime} - Saturday`;
+            speak(`Perfect! Your appointment is confirmed for ${selectedTime} this Saturday. We look forward to seeing you, ${firstName}!`);
+        }
+
+        function endConversation() {
+            isRecording = false;
+            if (recognition) recognition.stop();
+            speechSynthesis.cancel();
+            addMessage('sarah', "Thank you for visiting GT Auto Sales! Have a great day!");
+            speak("Thank you for visiting GT Auto Sales! Have a great day!");
+        }
+    </script>
+</body>
+</html>
