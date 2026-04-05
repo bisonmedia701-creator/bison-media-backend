@@ -37,32 +37,28 @@ if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
     VoiceResponse = twilio.twiml.VoiceResponse;
 }
 
-// Health check
+const BASE_URL = 'https://bison-media-backend.onrender.com';
+
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', twilio: !!twilioClient, phone: process.env.TWILIO_PHONE_NUMBER });
+    res.json({ status: 'ok', twilio: !!twilioClient });
 });
 
-// Sarah answers call
 app.post('/voice/incoming', (req, res) => {
     const twiml = new VoiceResponse();
     twiml.say({ voice: 'alice' }, 
-        'Thank you for calling GT Auto Sales! This is Sarah, and congratulations on your scratch and win prize! ' +
-        'Press 1 if you are interested in scheduling a test drive or visiting our dealership today.');
-    twiml.gather({ input: 'dtmf', numDigits: 1, timeout: 30, action: '/voice/gather' });
+        'Thank you for calling GT Auto Sales! This is Sarah, and congratulations on your scratch and win prize! Press 1 if you are interested in scheduling a test drive or visiting our dealership today.');
+    twiml.gather({ input: 'dtmf', numDigits: 1, timeout: 30, action: `${BASE_URL}/voice/gather` });
     res.type('text/xml').send(twiml.toString());
 });
 
-// Handle button press
 app.post('/voice/gather', (req, res) => {
     const twiml = new VoiceResponse();
     const digit = req.body.Digits;
     
     if (digit === '1') {
         twiml.say({ voice: 'alice' },
-            'Great! I can help you schedule an appointment. ' +
-            'We have availability this Saturday at 10 AM, 2 PM, or 4 PM. ' +
-            'Press 1 for 10 AM, press 2 for 2 PM, or press 3 for 4 PM.');
-        twiml.gather({ input: 'dtmf', numDigits: 1, timeout: 30, action: '/voice/confirm' });
+            'Great! I can help you schedule an appointment. We have availability this Saturday at 10 AM, 2 PM, or 4 PM. Press 1 for 10 AM, press 2 for 2 PM, or press 3 for 4 PM.');
+        twiml.gather({ input: 'dtmf', numDigits: 1, timeout: 30, action: `${BASE_URL}/voice/confirm` });
     } else {
         twiml.say({ voice: 'alice' }, 'No problem! Have a great day!');
         twiml.hangup();
@@ -70,7 +66,6 @@ app.post('/voice/gather', (req, res) => {
     res.type('text/xml').send(twiml.toString());
 });
 
-// Confirm appointment
 app.post('/voice/confirm', async (req, res) => {
     const twiml = new VoiceResponse();
     const digit = req.body.Digits;
@@ -83,8 +78,7 @@ app.post('/voice/confirm', async (req, res) => {
     appointments.push({ phone: from, time: timeSlot, date: 'Saturday', status: 'confirmed' });
     
     twiml.say({ voice: 'alice' },
-        `Perfect! Your appointment is confirmed for ${timeSlot} this Saturday at GT Auto Sales. ` +
-        `We look forward to seeing you! You will receive a text message shortly. Thank you!`);
+        `Perfect! Your appointment is confirmed for ${timeSlot} this Saturday at GT Auto Sales. We look forward to seeing you! You will receive a text message shortly. Thank you!`);
     
     if (from && twilioClient) {
         try {
@@ -100,17 +94,12 @@ app.post('/voice/confirm', async (req, res) => {
     res.type('text/xml').send(twiml.toString());
 });
 
-// Appointments API
 app.get('/api/appointments', (req, res) => res.json({ appointments }));
 
-// Upload contacts
 app.post('/api/contacts/upload', upload.single('file'), async (req, res) => {
     const results = [];
     fs.createReadStream(req.file.path).pipe(csvParser()).on('data', d => results.push(d));
-    fs.readFileSync(req.file.path, 'utf-8').split('\n').slice(1).forEach((line, i) => {
-        const cols = line.split(',');
-        if (cols[0]) contacts.push({ id: i+1, name: cols[0], phone: cols[1] || '' });
-    });
+    contacts = results.map((row, i) => ({ id: i+1, name: row.firstName || row.Name || '', phone: row.phone || row.Phone || '' }));
     res.json({ success: true, count: contacts.length });
 });
 
